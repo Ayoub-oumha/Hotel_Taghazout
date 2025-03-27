@@ -3,7 +3,7 @@ import logo from "../../public/images/logo.png" ;
 import { Link } from 'react-router-dom'
 function Header() {
   return (
-    <header className='flex items-center justify-between p-2 px-16'>
+    <header className='flex items-center justify-between p-2 px-16 font-[Poppins]'>
             <Link to='/' ><img className='w-24' src={logo} alt="logo" /></Link>
             <ul className='flex align-centre gap-10'>
                 <li><Link to="/" >Home</Link></li>
