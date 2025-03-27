@@ -99,9 +99,9 @@ function Home() {
     }
   return (
     <>
-    <Main/>
-    <Facilities/>
-    <Rooms/>
+        <Main/>
+        <Facilities/>
+        <Rooms/>
     </>
   )
 }

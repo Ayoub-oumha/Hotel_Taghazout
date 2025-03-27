@@ -12,7 +12,8 @@ function Header() {
                 <li><Link to="/About" >About</Link></li>
                 <li><Link to="/Contact" >Contact</Link></li>
             </ul>
-            <button className='bg-[#7C6A46] text-white p-2 rounded cursor-pointer' >Book now</button>
+            <div className='flex gap-2'><Link to="/login" className='bg-[#7C6A46] text-white p-2 rounded cursor-pointer' >Login</Link><button className='bg-[#7C6A46] text-white p-2 rounded cursor-pointer' >Book now</button></div>
+            
     </header>
   )
 }
