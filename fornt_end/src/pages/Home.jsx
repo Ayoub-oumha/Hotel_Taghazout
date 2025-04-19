@@ -1,109 +1,124 @@
 import React from 'react'
-import Homeimage from '../../public/images/Home_image.png' ;
-import image2 from '../../public/images/image2.png' ;
+import Homeimage from '../../public/images/Home_image.png';
+import image2 from '../../public/images/image2.png';
+import { Link } from 'react-router-dom';
+import { FaSwimmingPool, FaWifi, FaUtensils, FaSpa, FaGlassMartiniAlt, FaCar, FaCoffee, FaDumbbell } from 'react-icons/fa';
+
 function Home() {
-    let Main = ()=>{
-        return(
-            <div className='flex justify-between px-16 items-center'>
-                <div className='flex flex-col justify-start gap-4'>
-                    <h1 className='font-[Dancing Script] text-6xl'>TAGHAZOUT HUB</h1>
-                    <h1 className='text-4xl'>Hotel for every moment rich in emotion</h1>
-                    <p>Every moment feels like the first time in paradise view</p>
-                    <button className='bg-[#7C6A46] text-white p-2 rounded cursor-pointer w-[90px]'>Book now</button>
-                </div>
-                <div>
-                    <img className='w-[600px] ' src={Homeimage} alt="" />
-                </div>
-            </div>
-        )
-    }
-    let Facilities = ()=>{
+    const Main = () => {
         return (
-            <div className='px-16 mt-16 mb-16'>
-                <div className='flex flex-col justify-center items-center'>
-                    <h3 className='text-5xl'>Our Facilities</h3>
-                    <p>We offer modern (5 star) hotel facilities for your comfort.</p>
+            <div className='flex flex-col lg:flex-row justify-between px-4 md:px-16 py-8 lg:py-16 items-center gap-8'>
+                <div className='flex flex-col justify-start gap-4 text-center lg:text-left'>
+                    <h1 className='font-[Dancing Script] text-4xl md:text-5xl lg:text-6xl text-[#7C6A46]'>TAGHAZOUT HUB</h1>
+                    <h2 className='text-2xl md:text-3xl lg:text-4xl font-medium'>Hotel for every moment rich in emotion</h2>
+                    <p className='text-gray-600 max-w-md mx-auto lg:mx-0'>Every moment feels like the first time in paradise view. Experience luxury and comfort in the heart of Taghazout Bay.</p>
+                    <div className='mt-4'>
+                        <button className='bg-[#7C6A46] hover:bg-[#9F8A66] text-white px-6 py-3 rounded cursor-pointer transition duration-300 ease-in-out'>Book now</button>
+                    </div>
                 </div>
-                <div className='flex flex-wrap mt-6'>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
+                <div className='w-full lg:w-auto'>
+                    <img className='w-full max-w-xl rounded-lg shadow-xl mx-auto' src={Homeimage} alt="Taghazout Hub Hotel" />
+                </div>
+            </div>
+        )
+    }
 
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
+    const Facilities = () => {
+        const facilityItems = [
+            { icon: <FaSwimmingPool size={30} />, name: "Swimming Pool" },
+            { icon: <FaWifi size={30} />, name: "Free Wi-Fi" },
+            { icon: <FaUtensils size={30} />, name: "Restaurant" },
+            { icon: <FaSpa size={30} />, name: "Spa & Wellness" },
+            { icon: <FaGlassMartiniAlt size={30} />, name: "Bar & Lounge" },
+            { icon: <FaCar size={30} />, name: "Free Parking" },
+            { icon: <FaCoffee size={30} />, name: "Room Service" },
+            { icon: <FaDumbbell size={30} />, name: "Fitness Center" }
+        ];
 
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
+        return (
+            <div className='px-4 md:px-16 py-12 md:py-20 bg-gray-50'>
+                <div className='flex flex-col justify-center items-center mb-12'>
+                    <h3 className='text-3xl md:text-4xl lg:text-5xl font-medium mb-4 text-center'>Our Facilities</h3>
+                    <p className='text-gray-600 max-w-lg text-center'>We offer modern 5-star hotel facilities for your comfort and enjoyment during your stay.</p>
+                </div>
+                <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+                    {facilityItems.map((facility, index) => (
+                        <div key={index} className='flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out'>
+                            <div className='text-[#7C6A46] mb-3'>
+                                {facility.icon}
+                            </div>
+                            <p className='font-medium'>{facility.name}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
-
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
-
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
-
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
-
-                        <p>Swimming Pool</p>
-                    </div>
-                    <div className='w-1/4 flex flex-col items-center justify-center p-5'>
-                        <svg width="55" height="40" viewBox="0 0 55 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7673 0C36.36 0 35.1855 0.534546 35.1855 0.534546L23.1055 6.64364C21.4945 7.28 20.8582 9.84727 21.8255 11.1309L25.3527 16.2509L10.9164 23.6291L18.1818 29.0836L27.28 23.6291L36.3709 29.0836L40.0145 25.44L29.1055 10.8945L38.4036 5.33091C40.3236 4.36364 40.0145 2.77091 40.0145 1.80364C40 1.04 38.7055 0 36.7673 0ZM44.5527 10.9091C43.7168 10.9084 42.8889 11.0723 42.1164 11.3915C41.3438 11.7108 40.6417 12.1791 40.0501 12.7696C39.4585 13.3602 38.989 14.0615 38.6684 14.8336C38.3479 15.6056 38.1825 16.4332 38.1818 17.2691C38.1811 18.105 38.345 18.9329 38.6643 19.7055C38.9835 20.478 39.4518 21.1802 40.0424 21.7717C40.6329 22.3633 41.3343 22.8328 42.1063 23.1534C42.8783 23.4739 43.7059 23.6393 44.5418 23.64C46.23 23.6414 47.8497 22.9722 49.0445 21.7795C50.2393 20.5867 50.9113 18.9682 50.9127 17.28C50.9142 15.5918 50.2449 13.9721 49.0522 12.7773C47.8595 11.5826 46.241 10.9105 44.5527 10.9091ZM9.09091 29.0909L0 34.5455V40L9.09091 34.5455L18.1818 40L27.28 34.5455L36.3709 40L43.6364 34.5455L54.5455 40V34.5455L43.6364 29.0909L36.3709 34.5455L27.28 29.0909L18.1818 34.5455L9.09091 29.0909Z" fill="#7C6A46"/>
-                        </svg>
-
-                        <p>Swimming Pool</p>
+    const Rooms = () => {
+        return (
+            <div className='relative w-full'>
+                <div 
+                    className='w-full py-24 md:py-36 bg-cover bg-center bg-no-repeat' 
+                    style={{ backgroundImage: `url(${image2})` }}
+                >
+                    <div className='absolute inset-0 bg-[#7C6A46] opacity-70'></div>
+                    <div className='relative z-10 container mx-auto px-4 md:px-16 text-center'>
+                        <h2 className='text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-6'>Luxurious Room Collection</h2>
+                        <p className='text-white text-lg mb-8 max-w-2xl mx-auto'>
+                            Experience comfort and luxury in our carefully designed rooms with stunning views of the ocean and mountains.
+                        </p>
+                        <Link to="/rooms" className='inline-block bg-white text-[#7C6A46] hover:bg-[#E5D3B3] px-6 py-3 rounded font-medium transition duration-300 ease-in-out'>
+                            View Our Rooms
+                        </Link>
                     </div>
                 </div>
             </div>
         )
     }
-    let Rooms = ()=>{
-        return(
-            <div className='w-full h-96 bg-[image2]'   style={{ backgroundImage: `url(${image2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div className='bg-[#7C6A46] w-full h-full opacity-50'></div>
-                <h1>h</h1>
-                <h1>h</h1>
-                <h1>h</h1>
-                <h1>h</h1>
-                <h1>h</h1>
+
+    const Testimonials = () => {
+        return (
+            <div className='px-4 md:px-16 py-12 md:py-20'>
+                <div className='flex flex-col justify-center items-center mb-12'>
+                    <h3 className='text-3xl md:text-4xl lg:text-5xl font-medium mb-4 text-center'>What Our Guests Say</h3>
+                    <p className='text-gray-600 max-w-lg text-center'>Hear from our satisfied customers who have experienced the comfort and luxury of our hotel.</p>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+                    {[1, 2, 3].map((item) => (
+                        <div key={item} className='bg-white p-6 rounded-lg shadow-md'>
+                            <div className='flex items-center mb-4'>
+                                <div className='flex text-yellow-400'>
+                                    {"★★★★★".split('').map((star, i) => (
+                                        <span key={i}>{star}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            <p className='text-gray-600 italic mb-4'>
+                                "The stay at Taghazout Hub was incredible. The staff was friendly and the rooms were impeccably clean with amazing views of the ocean."
+                            </p>
+                            <div className='flex items-center'>
+                                <div className='w-12 h-12 bg-gray-300 rounded-full mr-4'></div>
+                                <div>
+                                    <p className='font-medium'>John Doe</p>
+                                    <p className='text-sm text-gray-500'>New York, USA</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         )
     }
-  return (
-    <>
-        <Main/>
-        <Facilities/>
-        <Rooms/>
-    </>
-  )
+
+    return (
+        <>
+            <Main />
+            <Facilities />
+            <Rooms />
+            <Testimonials />
+        </>
+    )
 }
 
-export default Home ;
+export default Home;
