@@ -10,23 +10,9 @@ use App\Http\Middleware\RoleMiddleware ;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 // Route::post('/register' , [UserController::class , "register"])->name("register") ;
-// Route::post('/login' , [UserController::class , "login"])->name("login") ;
+Route::post('/login' , [UserController::class , "login"])->name("login") ;
 // Route::post('/logout', [UserController::class, "logout"])->name("logout") ;
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-    
     // Route::middleware([ "role:admin"])->group(function () {
     //     Route::get('/rooms', [RoomsController::class, 'index']);
     // });
@@ -36,5 +22,7 @@ use App\Http\Middleware\RoleMiddleware ;
     // });
 
 
-// Route::get("/rooms" , [RoomsController::class , "index"])->middleware(["admin"]) ;
-Route::get("/users" , [UserController::class , "index"]) ;
+Route::get('/rooms', [\App\Http\Controllers\RoomsController::class, 'index']);
+Route::get('/users', [\App\Http\Controllers\RoomsController::class, 'index']);
+
+Route::get('/rooms', [\App\Http\Controllers\RoomsController::class, 'index']);
