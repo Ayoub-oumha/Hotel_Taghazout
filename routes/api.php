@@ -37,4 +37,4 @@ use App\Http\Middleware\RoleMiddleware ;
 
 
 // Route::get("/rooms" , [RoomsController::class , "index"])->middleware(["admin"]) ;
-// Route::get("/users" , [UserController::class , "index"]) ;
+Route::get("/users" , [UserController::class , "index"]) ;
