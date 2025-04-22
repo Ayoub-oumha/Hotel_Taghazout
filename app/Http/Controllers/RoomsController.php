@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Room;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class RoomsController extends Controller
 {
@@ -12,9 +15,11 @@ class RoomsController extends Controller
      */
     public function index()
     {
-        return [
-            "message" => "hello" 
-        ] ;
+        $rooms = Room::all();
+        return response()->json([
+            'status' => true,
+            'rooms' => $rooms
+        ]);
     }
 
     /**
@@ -22,7 +27,48 @@ class RoomsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'room_number' => 'required|string|unique:rooms,room_number',
+            'type' => 'required|in:standard,deluxe,suite,family,executive',
+            'description' => 'nullable|string',
+            'price_per_night' => 'required|numeric|min:0',
+            'capacity' => 'required|integer|min:1',
+            'has_air_conditioning' => 'boolean',
+            'has_wifi' => 'boolean',
+            'has_tv' => 'boolean',
+            'has_minibar' => 'boolean',
+            'has_balcony' => 'boolean',
+            'has_sea_view' => 'boolean',
+            'is_available' => 'boolean',
+            'amenities' => 'nullable|json',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $roomData = $request->except('image');
+        
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/rooms', $imageName);
+            $roomData['image'] = 'rooms/' . $imageName;
+        }
+
+        $room = Room::create($roomData);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Room created successfully',
+            'room' => $room
+        ], 201);
     }
 
     /**
@@ -30,7 +76,19 @@ class RoomsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $room = Room::find($id);
+        
+        if (!$room) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Room not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'room' => $room
+        ]);
     }
 
     /**
@@ -38,7 +96,63 @@ class RoomsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       
+        $room = Room::find($id);
+        
+        if (!$room) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Room not found'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'room_number' => 'string|unique:rooms,room_number,' . $id,
+            'type' => 'in:standard,deluxe,suite,family,executive',
+            'description' => 'nullable|string',
+            'price_per_night' => 'numeric|min:0',
+            'capacity' => 'integer|min:1',
+            'has_air_conditioning' => 'boolean',
+            'has_wifi' => 'boolean',
+            'has_tv' => 'boolean',
+            'has_minibar' => 'boolean',
+            'has_balcony' => 'boolean',
+            'has_sea_view' => 'boolean',
+            'is_available' => 'boolean',
+            'amenities' => 'nullable|json',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $roomData = $request->except('image');
+        
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($room->image) {
+                Storage::delete('public/' . $room->image);
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/rooms', $imageName);
+            $roomData['image'] = 'rooms/' . $imageName;
+        }
+
+        $room->update($roomData);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Room updated successfully',
+            'room' => $room
+        ]);
     }
 
     /**
@@ -46,6 +160,25 @@ class RoomsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $room = Room::find($id);
+        
+        if (!$room) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Room not found'
+            ], 404);
+        }
+
+        // Delete room image if exists
+        if ($room->image) {
+            Storage::delete('public/' . $room->image);
+        }
+
+        $room->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Room deleted successfully'
+        ]);
     }
 }

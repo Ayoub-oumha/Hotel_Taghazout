@@ -5,12 +5,19 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-// Route::post('/register' , [UserController::class , "register"])->name("register") ;
-Route::post('/login' , [UserController::class , 'login']) ;
-Route::post('/register' , [UserController::class , 'register']) ;
+// Public routes
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::get('/rooms', [RoomsController::class, 'index']);
+Route::get('/rooms/{id}', [RoomsController::class, 'show']);
 
-Route::middleware(['jwt' , 'role:user'])->get('/rooms' , [RoomsController::class , 'index']) ;
+// Protected routes
+Route::middleware(['jwt', 'role:admin'])->group(function () {
+    Route::post('/rooms', [RoomsController::class, 'store']);
+    Route::put('/rooms/{id}', [RoomsController::class, 'update']);
+    Route::delete('/rooms/{id}', [RoomsController::class, 'destroy']);
+});
