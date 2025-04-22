@@ -8,6 +8,8 @@ import Explore from '../pages/Explore';
 import Login from '../pages/Auth/Login';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
+import Dashboard from '../pages/Admin/Dashboard';
+
 
 
 export const router = createBrowserRouter([
@@ -18,6 +20,7 @@ export const router = createBrowserRouter([
         {path: "/About" , element: <About/>},
         {path: "/Login" , element: <Login/>},
         {path: "/contact" , element: <Contact/>},
+        {path: "/dashboard" , element: <Dashboard/>},
         {path: "/*" , element: <Error404/>},
     ]},
 ]);
