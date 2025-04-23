@@ -1,5 +1,7 @@
-import { RouterProvider } from "react-router-dom"
-import{ router} from "./router/index"
+import { AuthProvider } from "./context/AuthContext"
+import AppRouter from "./router"
+
+
 
 
 function App() {
@@ -7,9 +9,11 @@ function App() {
 
   
   return (
-    <>
-     <RouterProvider router={router} />
-    </>
+    <div>
+      <AuthProvider>
+        <AppRouter/>
+      </AuthProvider>
+    </div>
   )
 }
 

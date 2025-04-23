@@ -16,8 +16,9 @@ Route::get('/rooms', [RoomsController::class, 'index']);
 Route::get('/rooms/{id}', [RoomsController::class, 'show']);
 
 // Protected routes
-Route::middleware(['jwt', 'role:admin'])->group(function () {
+Route::middleware('auth:sanctum' , 'role:admin')->group(function () {
     Route::post('/rooms', [RoomsController::class, 'store']);
     Route::put('/rooms/{id}', [RoomsController::class, 'update']);
     Route::delete('/rooms/{id}', [RoomsController::class, 'destroy']);
 });
+Route::get('/test' , [UserController::class , 'index']) ;

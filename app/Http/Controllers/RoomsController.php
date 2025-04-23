@@ -27,6 +27,7 @@ class RoomsController extends Controller
      */
     public function store(Request $request)
     {
+        // dd("hello") ;
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'room_number' => 'required|string|unique:rooms,room_number',
