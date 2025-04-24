@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class RoomsController extends Controller
 {
@@ -59,7 +60,15 @@ class RoomsController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/rooms', $imageName);
+            
+            // Make sure the directory exists
+            $directory = public_path('storage/rooms');
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+            
+            // Save the file directly to the public storage path
+            $image->move($directory, $imageName);
             $roomData['image'] = 'rooms/' . $imageName;
         }
 
@@ -138,12 +147,23 @@ class RoomsController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($room->image) {
-                Storage::delete('public/' . $room->image);
+                $oldImagePath = public_path('storage/' . $room->image);
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
+                }
             }
             
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/rooms', $imageName);
+            
+            // Make sure the directory exists
+            $directory = public_path('storage/rooms');
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+            
+            // Save the file directly to the public storage path
+            $image->move($directory, $imageName);
             $roomData['image'] = 'rooms/' . $imageName;
         }
 
@@ -172,7 +192,10 @@ class RoomsController extends Controller
 
         // Delete room image if exists
         if ($room->image) {
-            Storage::delete('public/' . $room->image);
+            $imagePath = public_path('storage/' . $room->image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
         }
 
         $room->delete();

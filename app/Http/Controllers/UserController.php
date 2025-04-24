@@ -24,6 +24,7 @@ class UserController extends Controller
             $user = User::create([
                 "name"=> $request->name,
                 "email"=> $request->email,
+                "role" => "user" ,
                 "password"=> Hash::make($request->password),
             ]);
             
@@ -57,10 +58,10 @@ class UserController extends Controller
                     return response()->json(['message' => 'Mot de passe incorrect'], 401);
                 }
 
-                // Supprimer les anciens tokens (facultatif)
+     
                 $user->tokens()->delete();
                 
-                // Créer un nouveau token avec Sanctum
+          
                 $token = $user->createToken('auth_token')->plainTextToken;
                 
                 return response()->json([

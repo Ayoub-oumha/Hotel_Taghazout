@@ -1,7 +1,16 @@
 import axios from "axios";
+
+// Créer une instance de l'historique de navigation que nous pourrons importer
+let navigate;
+export const setNavigator = (nav) => {
+    navigate = nav;
+};
+
 const api = axios.create({
-    baseURL : 'http://localhost:8000/api'
+    baseURL : 'http://localhost:8000/api' ,
+    withCredentials : true 
 })
+
 // Request interceptor - simplifié
 api.interceptors.request.use(
     async (config) => {
@@ -28,9 +37,17 @@ api.interceptors.response.use(
             console.error('Unauthorized access - redirecting to login');
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            
+            // Utiliser navigate si disponible, sinon window.location comme solution de secours
+            if (navigate) {
+                navigate('/login');
+            } else {
+                // Fallback si navigate n'est pas encore défini
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }
 );
-export default api ;
+
+export default api;

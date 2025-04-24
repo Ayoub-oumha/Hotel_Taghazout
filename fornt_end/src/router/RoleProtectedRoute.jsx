@@ -8,14 +8,9 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
   const {user , loading} = useContext(AuthContext) ;
   
   if(!loading){
-
-    
-  
-
-
   if (user) {
-   
-    if (!allowedRoles.includes(user.roles[0].name)) {
+   console.log(user.role)
+    if (!allowedRoles.includes(user.role)) {
       return <Navigate to="/unauthorized" replace />;
     }
     

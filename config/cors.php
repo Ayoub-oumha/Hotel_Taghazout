@@ -1,10 +1,12 @@
-<?php 
-return [
-    'paths' => ['api/*'], // ou ajoute les chemins nécessaires
-    'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'], // React dev server
-    'allowed_headers' => ['*'],
-    'exposed_headers' => ['Authorization'],
-    'max_age' => 0,
-    'supports_credentials' => false,
-];
+<?php
+
+    return [
+        'paths' => ['api/*', 'sanctum/csrf-cookie'],
+        'allowed_origins' => ['*'], 
+        'allowed_methods' => ['*'],
+        'allowed_headers' => ['*'],
+        'exposed_headers' => [],
+        'max_age' => 0,
+        'supports_credentials' => true, 
+    ];
+    //comment out the above line to disable CORS

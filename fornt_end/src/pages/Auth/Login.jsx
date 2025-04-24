@@ -8,6 +8,7 @@ function Login() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const {login} = useContext(AuthContext)
 
@@ -41,7 +42,13 @@ function Login() {
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("Login failed");
+      if (err.response && err.response.data && err.response.data.message) {
+        setServerError(err.response.data.message);
+      } else {
+        // Message d'erreur générique si le serveur ne renvoie pas de message spécifique
+        setServerError("Échec de connexion. Veuillez vérifier vos identifiants.");
+
+      }
     }
   }
 
@@ -51,7 +58,8 @@ function Login() {
     
     if(Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
+    }
+     else {
       setErrors({});
       loginFunc();
     }
@@ -142,6 +150,8 @@ function Login() {
                 </label>
               </div>
             </div>
+
+            {serverError && <p className="mt-4 text-sm text-red-600">{serverError}</p>}
 
             <div>
               <button
