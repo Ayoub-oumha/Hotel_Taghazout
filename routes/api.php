@@ -16,9 +16,16 @@ Route::get('/rooms', [RoomsController::class, 'index']);
 Route::get('/rooms/{id}', [RoomsController::class, 'show']);
 
 // Protected routes
-Route::middleware('auth:sanctum' , 'role:admin')->group(function () {
+Route::middleware( 'auth:sanctum' ,'role:admin')->group(function () {
     Route::post('/rooms', [RoomsController::class, 'store']);
     Route::put('/rooms/{id}', [RoomsController::class, 'update']);
     Route::delete('/rooms/{id}', [RoomsController::class, 'destroy']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    
 });
-Route::get('/test' , [UserController::class , 'index']) ;
+// Route::apiResource('users' , UserController::class);
+// Route::get('/test' , [UserController::class , 'index']) ;

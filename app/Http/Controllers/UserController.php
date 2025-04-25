@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Workbench\App\Models\User as ModelsUser;
 
 class UserController extends Controller
 {
@@ -82,6 +83,19 @@ class UserController extends Controller
         }
         
         public function index(){
+           $users = User::all() ;
+           return response()->json(['users' => $users] , 200) ;
+        }
+        public function store(){
+            return ["users" => "this is message"];
+        }
+        public function show( Request $request){
+            return ["users" => "this "];
+        }
+        public function update ( Request $request){
+            return ["users" => "this is message"];
+        }
+        public function destroy( Request $request){
             return ["users" => "this is message"];
         }
 }
