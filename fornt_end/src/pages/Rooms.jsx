@@ -6,6 +6,7 @@ import { PiShower } from "react-icons/pi";
 import { BsTv } from "react-icons/bs";
 import { FaSwimmingPool, FaParking, FaGlassMartiniAlt, FaMountain, FaSnowflake } from "react-icons/fa";
 import api from '../api/api';
+import { Link } from 'react-router-dom';
 
 function Rooms() {
     const [rooms, setRooms] = useState([]);
@@ -178,7 +179,9 @@ function Rooms() {
                     ) : (
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
                             {rooms.map(room => (
+                                <Link to={'/Rooms/' +  room.id}>
                                 <SectionRooms key={room.id} room={room} />
+                                </Link>
                             ))}
                         </div>
                     )}

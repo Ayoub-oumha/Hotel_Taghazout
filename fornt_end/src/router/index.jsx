@@ -13,6 +13,9 @@ import Register from '../pages/Auth/Register';
 import RoleProtectedRoute from './RoleProtectedRoute';
 import Unauthorized from '../pages/Unauthorized';
 import { setNavigator } from '../api/api';
+import RoomsDetails from '../pages/RoomsDetails';
+import Payment from '../pages/Payment';
+import BookingConfirmation from '../pages/BookingConfirmation';
 
 // Composant wrapper pour configurer le navigateur
 const NavigationManager = () => {
@@ -36,6 +39,9 @@ function AppRouter() {
             <Route path="Login" element={<Login />} />
             <Route index element={<Home />} />
             <Route path="Rooms" element={<Rooms />} />
+            <Route path="Rooms/:id" element={<RoomsDetails />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="booking-confirmation" element={<BookingConfirmation />} />
             <Route path="Explore" element={<Explore />} />
             <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />
             <Route path="register" element={<Register />} />
@@ -43,7 +49,6 @@ function AppRouter() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="*" element={<Error404 />} />
             <Route path="unauthorized" element={<Unauthorized/>} />
-            
           </Route>
         </Routes>
       </BrowserRouter>
