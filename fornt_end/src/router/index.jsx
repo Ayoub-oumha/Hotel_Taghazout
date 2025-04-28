@@ -16,6 +16,8 @@ import { setNavigator } from '../api/api';
 import RoomsDetails from '../pages/RoomsDetails';
 import Payment from '../pages/Payment';
 import BookingConfirmation from '../pages/BookingConfirmation';
+import Users from '../pages/Admin/Users';
+import RoomsAdmin from '../pages/Admin/RoomsAdmin';
 
 // Composant wrapper pour configurer le navigateur
 const NavigationManager = () => {
@@ -44,6 +46,8 @@ function AppRouter() {
             <Route path="booking-confirmation" element={<BookingConfirmation />} />
             <Route path="Explore" element={<Explore />} />
             <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />
+            <Route path="users" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><Users/></RoleProtectedRoute>} />
+            <Route path="admin/rooms" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><RoomsAdmin/></RoleProtectedRoute>} />
             <Route path="register" element={<Register />} />
             <Route path="contact" element={<Contact />} />
             <Route path="dashboard" element={<Dashboard />} />

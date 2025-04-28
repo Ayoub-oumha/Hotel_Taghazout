@@ -9,7 +9,7 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
   
   if(!loading){
   if (user) {
-   console.log(user.role)
+  //  console.log(user.role)
     if (!allowedRoles.includes(user.role)) {
       return <Navigate to="/unauthorized" replace />;
     }

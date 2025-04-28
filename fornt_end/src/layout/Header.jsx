@@ -38,6 +38,12 @@ function Header() {
           {user && user.role === 'admin' && (
             <li><Link to="/dashboard" className="text-[#7C6A46] font-bold">Dashboard</Link></li>
           )}
+          {user && user.role === 'admin' && (
+            <li><Link to="/users" className="text-[#7C6A46] font-bold">users</Link></li>
+          )}
+          {user && user.role === 'admin' && (
+            <li><Link to="/admin/rooms" className="text-[#7C6A46] font-bold">Gestion des chembre</Link></li>
+          )}
         </ul>
         
         <div className='hidden md:flex gap-2 items-center'>
