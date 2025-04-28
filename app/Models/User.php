@@ -48,4 +48,8 @@ class User extends Authenticatable
         ];
     }
     // JWT methods removed
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

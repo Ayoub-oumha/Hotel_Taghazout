@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -26,6 +27,13 @@ Route::middleware( 'auth:sanctum' ,'role:admin')->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     
+});
+// Reservation API Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('reservations', ReservationController::class);
+    Route::post('reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+    Route::post('reservations/{id}/confirm', [ReservationController::class, 'confirm']);
+    Route::post('reservations/{id}/complete', [ReservationController::class, 'complete']);
 });
 // Route::apiResource('users' , UserController::class);
 // Route::get('/test' , [UserController::class , 'index']) ;
