@@ -57,6 +57,50 @@ class ReservationController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, string $id)
+    {
+        
+        $reservation = Reservation::find($id);
+        if(!$reservation){
+            return response()->json(["error" => "reservation not found"] ,404) ;
+        }
+        
+        // Check if user owns this reservation or is admin
+        if (Auth::id() !== $reservation->user_id && !Auth::user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+        
+        $validated = $request->validate([
+            'room_id' => 'sometimes|required|exists:rooms,id',
+            'check_in_date' => 'sometimes|required|date|after_or_equal:today',
+            'check_out_date' => 'sometimes|required|date|after:check_in_date',
+            'status' => 'sometimes|required|in:pending,confirmed,cancelled,completed',
+        ]);
+
+        if (isset($validated['room_id']) || isset($validated['check_in_date']) || isset($validated['check_out_date'])) {
+            $room = Room::findOrFail($validated['room_id'] ?? $reservation->room_id);
+            
+            // Calculate number of days
+            $checkIn = new \DateTime($validated['check_in_date'] ?? $reservation->check_in_date);
+            $checkOut = new \DateTime($validated['check_out_date'] ?? $reservation->check_out_date);
+            $days = $checkIn->diff($checkOut)->days;
+            
+            // Calculate total price
+            $totalPrice = $room->price_per_night * $days;
+            $validated['total_price'] = $totalPrice;
+        }
+
+        $reservation->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Reservation updated successfully',
+            'data' => $reservation
+        ]);
+    }
 
     public function destroy(string $id)
     {
@@ -79,6 +123,66 @@ class ReservationController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Reservation deleted successfully'
+        ]);
+    }
+    public function cancel(string $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        
+       
+        if (Auth::id() !== $reservation->user_id && !Auth::user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+        
+        $reservation->update(['status' => 'cancelled']);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Reservation cancelled successfully',
+            'data' => $reservation
+        ]);
+    }
+    public function confirm(string $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        
+        // Usually only admins can confirm
+        if (!Auth::user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+        
+        $reservation->update(['status' => 'confirmed']);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Reservation confirmed successfully',
+            'data' => $reservation
+        ]);
+    }
+    public function complete(string $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        
+        
+        if (!Auth::user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+        
+        $reservation->update(['status' => 'completed']);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Reservation marked as completed',
+            'data' => $reservation
         ]);
     }
 

@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reservation::class);
     }
+    public function isAdmin()
+{
+    return $this->role === 'admin'; // or whatever field you're using to check roles
+}
 }
