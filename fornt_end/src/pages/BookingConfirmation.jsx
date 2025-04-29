@@ -1,195 +1,180 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { FaCalendarCheck, FaUser, FaBed, FaCalendarAlt, FaMapMarkerAlt, FaCreditCard } from 'react-icons/fa';
+import { FaCheckCircle, FaCalendarAlt, FaBed, FaUser, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 function BookingConfirmation() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { bookingData, totalPrice, room } = location.state || {};
   
-  // Get confirmation data from location state
-  const confirmationData = location.state || null;
-  
-  // If there's no data, redirect to home after a short delay
   useEffect(() => {
-    if (!confirmationData) {
-      const timer = setTimeout(() => {
-        navigate('/');
-      }, 3000);
-      
-      return () => clearTimeout(timer);
+    // Si pas de données de réservation, rediriger vers la page d'accueil
+    if (!bookingData || !room) {
+      navigate('/');
     }
-  }, [confirmationData, navigate]);
-  
-  // Generate booking reference number
-  const generateBookingReference = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = 'TH-';
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-  
-  // If no confirmation data is available
-  if (!confirmationData) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <div className="bg-red-50 p-8 rounded-lg text-center max-w-md">
-          <div className="mb-4">
-            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-              </svg>
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold text-red-800 mb-2">Aucune information de réservation</h2>
-          <p className="text-red-700 mb-4">Nous n'avons pas trouvé de détails de réservation. Vous allez être redirigé vers la page d'accueil.</p>
-          <div className="mt-6">
-            <Link to="/" className="bg-[#7C6A46] hover:bg-[#8d794f] text-white font-medium py-2 px-4 rounded transition-colors duration-200">
-              Retour à l'accueil
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+  }, [bookingData, room, navigate]);
+
+  if (!bookingData || !room) {
+    return null;
   }
-  
-  const { bookingData, paymentData, totalPrice, room } = confirmationData;
-  const bookingReference = generateBookingReference();
-  const baseImageUrl = 'http://127.0.0.1:8000/storage/';
-  
-  // Calculate booking length
+
+  // Calculer les détails de la réservation
   const checkIn = new Date(bookingData.checkInDate);
   const checkOut = new Date(bookingData.checkOutDate);
   const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+  const baseImageUrl = 'http://127.0.0.1:8000/storage/';
+  
+  // Formater les dates
+  const formatDate = (date) => {
+    return date.toLocaleDateString('fr-FR', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    });
+  };
+  
+  // Générer un numéro de réservation
+  const bookingNumber = `BK-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto">
-        {/* Success Banner */}
-        <div className="bg-green-100 rounded-lg p-6 mb-8 flex items-center gap-4">
-          <div className="bg-green-200 rounded-full p-3">
-            <FaCalendarCheck className="text-green-700 text-2xl" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-green-800">Réservation confirmée!</h1>
-            <p className="text-green-700">
-              Votre réservation a été traitée avec succès. Vous recevrez un email de confirmation dans quelques instants.
-            </p>
-          </div>
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-green-600 text-white p-6 text-center">
+          <FaCheckCircle className="mx-auto text-5xl mb-4" />
+          <h1 className="text-3xl font-bold">Réservation Confirmée</h1>
+          <p className="text-xl mt-2">Merci d'avoir choisi l'Hôtel Taghazout!</p>
         </div>
         
-        {/* Booking Details Card */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-          <div className="bg-[#7C6A46] py-4 px-6 text-white">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Détails de la réservation</h2>
-              <p className="text-sm bg-white text-[#7C6A46] py-1 px-3 rounded-full font-medium">
-                Réf: {bookingReference}
-              </p>
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
+            <div>
+              <p className="text-sm text-gray-500">Numéro de réservation</p>
+              <p className="text-xl font-bold">{bookingNumber}</p>
             </div>
+            <Link 
+              to="/my-bookings" 
+              className="bg-[#7C6A46] hover:bg-[#8d794f] text-white py-2 px-4 rounded-md transition-colors duration-200"
+            >
+              Voir mes réservations
+            </Link>
           </div>
           
-          <div className="p-6">
-            {/* Room Info */}
-            <div className="flex flex-col md:flex-row gap-6 mb-6 pb-6 border-b">
-              <div className="w-full md:w-1/3">
-                <div className="rounded-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FaBed className="text-[#7C6A46]" /> Détails de la chambre
+              </h2>
+              <div className="flex items-start gap-4">
+                <div className="w-20 h-20 rounded-lg overflow-hidden">
                   <img 
                     src={room.image ? `${baseImageUrl}${room.image}` : '/images/room.png'} 
                     alt={room.name}
-                    className="w-full h-48 object-cover" 
+                    className="w-full h-full object-cover" 
                   />
                 </div>
-              </div>
-              <div className="w-full md:w-2/3">
-                <h3 className="text-xl font-semibold mb-2">{room.name}</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <FaUser className="text-[#7C6A46]" />
-                    <span>{bookingData.numberOfGuests} {bookingData.numberOfGuests > 1 ? 'personnes' : 'personne'}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <FaCalendarAlt className="text-[#7C6A46]" />
-                    <span>{nights} {nights > 1 ? 'nuits' : 'nuit'}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <FaBed className="text-[#7C6A46]" />
-                    <span>Chambre {room.type}</span>
-                  </div>
+                <div>
+                  <h3 className="font-semibold">{room.name}</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {bookingData.numberOfGuests} {bookingData.numberOfGuests > 1 ? 'personnes' : 'personne'}
+                  </p>
                 </div>
               </div>
             </div>
             
-            {/* Dates */}
-            <div className="flex flex-col md:flex-row justify-between gap-4 mb-6 pb-6 border-b">
-              <div className="flex-1 bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-500 mb-1">Check-in</p>
-                <p className="font-semibold">{new Date(bookingData.checkInDate).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                <p className="mt-1 text-sm text-gray-500">À partir de 14:00</p>
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FaCalendarAlt className="text-[#7C6A46]" /> Dates de séjour
+              </h2>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Check-in</p>
+                    <p className="text-gray-600">{formatDate(checkIn)}</p>
+                    <p className="text-sm text-gray-500">À partir de 14h00</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">Check-out</p>
+                    <p className="text-gray-600">{formatDate(checkOut)}</p>
+                    <p className="text-sm text-gray-500">Jusqu'à 12h00</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">Durée: {nights} {nights > 1 ? 'nuits' : 'nuit'}</p>
               </div>
-              <div className="flex-1 bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-500 mb-1">Check-out</p>
-                <p className="font-semibold">{new Date(bookingData.checkOutDate).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                <p className="mt-1 text-sm text-gray-500">Jusqu'à 12:00</p>
-              </div>
-            </div>
-            
-            {/* Payment and Address */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b">
-              <div>
-                <h4 className="font-semibold mb-3 flex items-center gap-2">
-                  <FaCreditCard className="text-[#7C6A46]" /> Paiement
-                </h4>
-                <p className="text-gray-600">{paymentData.cardholderName}</p>
-                <p className="text-gray-600">{paymentData.cardNumber}</p>
-                <p className="text-gray-700 font-semibold mt-2">Total payé: {totalPrice + Math.round(totalPrice * 0.1) + 150} MAD</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-3 flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-[#7C6A46]" /> Adresse de facturation
-                </h4>
-                <p className="text-gray-600">{paymentData.billingAddress}</p>
-                <p className="text-gray-600">{paymentData.postalCode}, {paymentData.city}</p>
-                <p className="text-gray-600">{paymentData.country}</p>
-              </div>
-            </div>
-            
-            {/* Special Requests */}
-            {bookingData.specialRequests && (
-              <div className="mb-6 pb-6 border-b">
-                <h4 className="font-semibold mb-2">Demandes spéciales</h4>
-                <p className="text-gray-600">{bookingData.specialRequests}</p>
-              </div>
-            )}
-            
-            {/* Next Steps */}
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-800 mb-2">Prochaines étapes</h4>
-              <p className="text-blue-700 text-sm mb-2">
-                Vous recevrez un email de confirmation contenant tous les détails de votre réservation.
-              </p>
-              <p className="text-blue-700 text-sm">
-                Pour toute question, n'hésitez pas à nous contacter au +212 528 123 456 ou par email à contact@taghazouthub.com
-              </p>
             </div>
           </div>
-        </div>
-        
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link 
-            to="/"
-            className="bg-[#7C6A46] hover:bg-[#8d794f] text-white font-medium py-3 px-6 rounded transition-colors duration-200 text-center"
-          >
-            Retour à l'accueil
-          </Link>
-          <button 
-            onClick={() => window.print()}
-            className="bg-white border border-[#7C6A46] text-[#7C6A46] hover:bg-gray-50 font-medium py-3 px-6 rounded transition-colors duration-200"
-          >
-            Imprimer confirmation
-          </button>
+          
+          <div className="border-t border-b border-gray-200 py-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">Récapitulatif du paiement</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">{nights} {nights > 1 ? 'nuits' : 'nuit'} x {totalPrice / nights} MAD</span>
+                <span>{totalPrice} MAD</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Taxes (10%)</span>
+                <span>{Math.round(totalPrice * 0.1)} MAD</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Frais de service</span>
+                <span>150 MAD</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg pt-2">
+                <span>Total payé</span>
+                <span>{totalPrice + Math.round(totalPrice * 0.1) + 150} MAD</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FaUser className="text-[#7C6A46]" /> Coordonnées
+              </h2>
+              <div className="space-y-2">
+                <p className="flex items-center gap-2">
+                  <FaUser className="text-gray-500" />
+                  <span>{bookingData.guestName || "Invité"}</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <FaEnvelope className="text-gray-500" />
+                  <span>{bookingData.guestEmail || "email@exemple.com"}</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <FaPhoneAlt className="text-gray-500" />
+                  <span>{bookingData.guestPhone || "Non spécifié"}</span>
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-[#7C6A46]" /> Adresse de l'hôtel
+              </h2>
+              <div className="space-y-2">
+                <p className="font-medium">Hôtel Taghazout</p>
+                <p>12 Avenue des Plages</p>
+                <p>Taghazout, 80023</p>
+                <p>Maroc</p>
+                <p className="mt-2 text-sm">
+                  <a href="tel:+212-5-28-20-00-00" className="text-[#7C6A46] hover:underline">+212 5 28 20 00 00</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-8 bg-blue-50 p-4 rounded-lg">
+            <h3 className="text-lg font-medium text-blue-800 mb-2">Information importante</h3>
+            <p className="text-sm text-blue-700">
+              Une confirmation de réservation a été envoyée à votre adresse e-mail. Si vous avez des questions ou besoin de modifier votre réservation, n'hésitez pas à contacter notre équipe de service client.
+            </p>
+          </div>
+          
+          <div className="flex justify-center mt-8">
+            <Link to="/" className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition-colors duration-200">
+              Retour à l'accueil
+            </Link>
+          </div>
         </div>
       </div>
     </div>

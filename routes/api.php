@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomsController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,5 +36,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('reservations/{id}/confirm', [ReservationController::class, 'confirm']);
     Route::post('reservations/{id}/complete', [ReservationController::class, 'complete']);
 });
+
+Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+
+Route::get('/payment/success', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Paiement traité avec succès'
+    ]);
+})->name('payment.success');
 // Route::apiResource('users' , UserController::class);
 // Route::get('/test' , [UserController::class , 'index']) ;
