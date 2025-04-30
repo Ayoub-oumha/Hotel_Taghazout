@@ -14,7 +14,7 @@ function RoomsDetails() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   
-  // Booking form state
+  
   const [booking, setBooking] = useState({
     checkIn: '',
     checkOut: '',
@@ -24,7 +24,7 @@ function RoomsDetails() {
   const [bookingErrors, setBookingErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Date validation to ensure minimum dates
+ 
   const today = new Date().toISOString().split('T')[0];
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -47,12 +47,12 @@ function RoomsDetails() {
     fetchRoomDetails();
   }, [id]);
 
-  // Handle booking form input changes
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBooking({ ...booking, [name]: value });
     
-    // Clear error when field is edited
+    
     if (bookingErrors[name]) {
       const newErrors = { ...bookingErrors };
       delete newErrors[name];
@@ -60,7 +60,7 @@ function RoomsDetails() {
     }
   };
 
-  // Validate the booking form
+  
   const validateBooking = () => {
     const errors = {};
     
@@ -91,20 +91,19 @@ function RoomsDetails() {
     return errors;
   };
 
-  // Handle booking submission
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
+    
     const errors = validateBooking();
     if (Object.keys(errors).length > 0) {
       setBookingErrors(errors);
       return;
     }
     
-    // Check if user is logged in
     if (!user) {
-      // Redirect to login with return URL
+      
       navigate('/login', { state: { returnUrl: `/rooms/${id}` } });
       return;
     }
@@ -112,7 +111,6 @@ function RoomsDetails() {
     setIsSubmitting(true);
     
     try {
-      // Create the booking data
       const bookingData = {
         roomId: id,
         checkInDate: booking.checkIn,
@@ -122,16 +120,16 @@ function RoomsDetails() {
       };
       
       // Here you would typically submit the booking to your API
-      // const response = await api.post('/bookings', bookingData);
+      const response = await api.post('/reservations', bookingData);
       
       // For now, we'll simulate a successful booking and redirect to payment
-      setTimeout(() => {
-        // Store booking data in localStorage or state management to access in payment page
-        localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+      // setTimeout(() => {
+      //   // Store booking data in localStorage or state management to access in payment page
+      //   localStorage.setItem('currentBooking', JSON.stringify(bookingData));
         
-        // Navigate to payment page
-        navigate('/payment', { state: { bookingData } });
-      }, 1000);
+      //   // Navigate to payment page
+      //   navigate('/payment', { state: { bookingData } });
+      // }, 1000);
     } catch (err) {
       console.error("Error creating booking:", err);
       setBookingErrors({ submit: "Erreur lors de la création de la réservation. Veuillez réessayer." });

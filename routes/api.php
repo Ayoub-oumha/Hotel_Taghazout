@@ -3,6 +3,7 @@
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,3 +48,9 @@ Route::get('/payment/success', function () {
 })->name('payment.success');
 // Route::apiResource('users' , UserController::class);
 // Route::get('/test' , [UserController::class , 'index']) ;
+
+
+// Routes de paiement Stripe
+Route::post('/stripe/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+Route::post('/stripe/confirm-payment', [StripePaymentController::class, 'confirmPayment']);
+Route::post('/stripe/webhook', [StripePaymentController::class, 'handleWebhook']);

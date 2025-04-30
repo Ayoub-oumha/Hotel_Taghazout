@@ -15,7 +15,7 @@ import Unauthorized from '../pages/Unauthorized';
 import { setNavigator } from '../api/api';
 import RoomsDetails from '../pages/RoomsDetails';
 import Payment from '../pages/Payment';
-import BookingConfirmation from '../pages/BookingConfirmation';
+import ReservationConfirmation from '../pages/ReservationConfirmation';
 import Users from '../pages/Admin/Users';
 import RoomsAdmin from '../pages/Admin/RoomsAdmin';
 
@@ -43,7 +43,7 @@ function AppRouter() {
             <Route path="Rooms" element={<Rooms />} />
             <Route path="Rooms/:id" element={<RoomsDetails />} />
             <Route path="payment" element={<Payment />} />
-            <Route path="booking-confirmation" element={<BookingConfirmation />} />
+            <Route path="reservation-confirmation" element={<ReservationConfirmation />} />
             <Route path="Explore" element={<Explore />} />
             <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />
             <Route path="users" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><Users/></RoleProtectedRoute>} />

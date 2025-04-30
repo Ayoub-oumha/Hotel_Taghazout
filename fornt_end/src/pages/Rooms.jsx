@@ -24,7 +24,7 @@ function Rooms() {
             } catch (err) {
                 console.error("Error fetching rooms:", err);
                 setError("Impossible de charger les chambres. Veuillez réessayer plus tard.");
-                setLoading(false);
+                setLoading(false); 
             }
         };
 
@@ -37,8 +37,8 @@ function Rooms() {
                 <video autoPlay muted loop width="100%" height="900px">
                     <source src={video1} type="video/mp4" />
                 </video>
-                <div className='absolute top-0 w-full md:w-1/2 mx-auto left-0 right-0 text-center mt-32 text-white px-4'>
-                    <h1 className='text-4xl md:text-6xl font-bold'>Rooms and Suites</h1>
+                <div className='absolute hidden md:block top-20 w-full md:w-1/2  mx-auto left-0 right-0 text-center mt-32 text-white px-4'>
+                        <h1 className='text-4xl md:text-6xl font-bold'>Rooms and Suites</h1>
                     <p className='text-xl mt-4'>Book your stay</p>
                     <p className='mt-4 max-w-2xl mx-auto'>
                         We invite you to explore our website, browse through our rooms, check out our services, and book your stay with us today. Let us help you create unforgettable memories at Taghazout Hub. Your adventure in Taghazout starts here!
@@ -102,7 +102,7 @@ function Rooms() {
                         <h3 className='text-xl font-semibold'>{room.name}</h3>
                         <span className={`text-xs px-2 py-1 rounded-full ${room.is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                             {room.is_available ? 'Available' : 'Booked'}
-                        </span>
+                        </span> 
                     </div>
                     <div className='flex items-center gap-2 mb-2'>
                         <span className='text-gray-600 text-sm'>{room.type}</span>

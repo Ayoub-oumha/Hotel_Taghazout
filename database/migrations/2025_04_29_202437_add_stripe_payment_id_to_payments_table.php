@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('reservations', function (Blueprint $table) {
-            $table->string('payment_id')->nullable();
-            $table->string('payment_status')->default('unpaid');
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('stripe_payment_id')->nullable()->after('payment_method');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('reservations', function (Blueprint $table) {
-            $table->dropColumn('payment_id');
-            $table->dropColumn('payment_status');
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn('stripe_payment_id');
         });
     }
 };
