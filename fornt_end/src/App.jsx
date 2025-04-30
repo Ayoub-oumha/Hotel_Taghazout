@@ -1,17 +1,14 @@
 import { AuthProvider } from "./context/AuthContext"
+import { ReservationCartProvider } from "./context/ReservationCartContext"
 import AppRouter from "./router"
 
-
-
-
 function App() {
-
-
-  
   return (
     <div>
       <AuthProvider>
-        <AppRouter/>
+        <ReservationCartProvider>
+          <AppRouter/>
+        </ReservationCartProvider>
       </AuthProvider>
     </div>
   )

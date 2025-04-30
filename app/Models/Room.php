@@ -49,4 +49,9 @@ class Room extends Model
         'has_sea_view' => 'boolean',
         'is_available' => 'boolean',
     ];
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

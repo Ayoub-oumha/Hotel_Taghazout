@@ -2,11 +2,13 @@ import React, { useState, useContext } from 'react';
 import logo from "../../public/images/logo.png";
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FaUserCircle, FaSignOutAlt, FaUserShield } from 'react-icons/fa';
+import { FaUserCircle, FaSignOutAlt, FaUserShield, FaShoppingCart } from 'react-icons/fa';
+import { useReservationCart } from '../context/ReservationCartContext';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
+  const { cartCount } = useReservationCart();
   const navigate = useNavigate();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -53,51 +55,66 @@ function Header() {
               <Link to="/register" className='border border-[#7C6A46] text-[#7C6A46] px-3 py-2 rounded cursor-pointer hover:bg-[#7C6A46] hover:text-white transition-colors'>Register</Link>
             </>
           ) : (
-            <div className="relative">
-              <button 
-                onClick={toggleUserMenu}
-                className="flex items-center gap-2 bg-[#F5F2EA] px-3 py-2 rounded-full hover:bg-[#EAE6DF] transition-colors"
-              >
-                {user.role === 'admin' && (
-                  <FaUserShield className="text-[#7C6A46]" />
+            <>
+              {/* Cart Icon with Badge */}
+              <Link to="/reservation-cart" className="relative mr-3">
+                <FaShoppingCart className="text-[#7C6A46] text-xl" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
                 )}
-                {user.role !== 'admin' && (
-                  <FaUserCircle className="text-[#7C6A46]" />
-                )}
-                <span className="font-medium text-gray-700">{user.name}</span>
-                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                      <p className="font-bold">{user.name}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
-                    </div>
-                    {user.role === 'admin' && (
-                      <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Dashboard
+              </Link>
+
+              <div className="relative">
+                <button 
+                  onClick={toggleUserMenu}
+                  className="flex items-center gap-2 bg-[#F5F2EA] px-3 py-2 rounded-full hover:bg-[#EAE6DF] transition-colors"
+                >
+                  {user.role === 'admin' && (
+                    <FaUserShield className="text-[#7C6A46]" />
+                  )}
+                  {user.role !== 'admin' && (
+                    <FaUserCircle className="text-[#7C6A46]" />
+                  )}
+                  <span className="font-medium text-gray-700">{user.name}</span>
+                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+                    <div className="py-1">
+                      <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                        <p className="font-bold">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                      </div>
+                      {user.role === 'admin' && (
+                        <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          Dashboard
+                        </Link>
+                      )}
+                      <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Profil
                       </Link>
-                    )}
-                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Profil
-                    </Link>
-                    <Link to="/bookings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Mes réservations
-                    </Link>
-                    <button 
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
-                    >
-                      <FaSignOutAlt className="mr-2" /> Se déconnecter
-                    </button>
+                      <Link to="/my-reservations" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Mes réservations
+                      </Link>
+                      <Link to="/reservation-cart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Panier de réservation {cartCount > 0 && `(${cartCount})`}
+                      </Link>
+                      <button 
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
+                      >
+                        <FaSignOutAlt className="mr-2" /> Se déconnecter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </>
           )}
           
           <button className='bg-[#7C6A46] text-white px-3 py-2 rounded cursor-pointer'>Book now</button>
@@ -142,6 +159,19 @@ function Header() {
               </>
             ) : (
               <>
+                {/* Mobile Cart Link */}
+                <Link to="/reservation-cart" onClick={toggleMenu} className="flex items-center justify-between bg-[#F5F2EA] p-3 rounded-md">
+                  <div className="flex items-center gap-2">
+                    <FaShoppingCart className="text-[#7C6A46]" />
+                    <span>Panier de réservation</span>
+                  </div>
+                  {cartCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+                
                 <div className="bg-[#F5F2EA] p-3 rounded-md mb-2">
                   <div className="flex items-center gap-2 mb-2">
                     {user.role === 'admin' ? <FaUserShield className="text-[#7C6A46]" /> : <FaUserCircle className="text-[#7C6A46]" />}
@@ -160,7 +190,7 @@ function Header() {
                     <Link to="/profile" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
                       Profil
                     </Link>
-                    <Link to="/bookings" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
+                    <Link to="/my-reservations" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
                       Mes réservations
                     </Link>
                   </div>

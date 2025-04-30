@@ -18,6 +18,9 @@ import Payment from '../pages/Payment';
 import ReservationConfirmation from '../pages/ReservationConfirmation';
 import Users from '../pages/Admin/Users';
 import RoomsAdmin from '../pages/Admin/RoomsAdmin';
+import MyReservations from '../pages/MyReservations';
+import ModifyReservation from '../pages/ModifyReservation';
+import ReservationCart from '../pages/ReservationCart';
 
 // Composant wrapper pour configurer le navigateur
 const NavigationManager = () => {
@@ -42,7 +45,10 @@ function AppRouter() {
             <Route index element={<Home />} />
             <Route path="Rooms" element={<Rooms />} />
             <Route path="Rooms/:id" element={<RoomsDetails />} />
-            <Route path="payment" element={<Payment />} />
+            <Route path="payment" element={ <RoleProtectedRoute allowedRoles={["user"]} ><Payment/></RoleProtectedRoute> } />
+            <Route path="my-reservations" element={ <RoleProtectedRoute allowedRoles={["user"]} ><MyReservations/></RoleProtectedRoute> } />
+            <Route path="modify-reservation/:id" element={ <RoleProtectedRoute allowedRoles={["user"]} ><ModifyReservation/></RoleProtectedRoute> } />
+            <Route path="reservation-cart" element={ <RoleProtectedRoute allowedRoles={["user"]} ><ReservationCart/></RoleProtectedRoute> } />
             <Route path="reservation-confirmation" element={<ReservationConfirmation />} />
             <Route path="Explore" element={<Explore />} />
             <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />

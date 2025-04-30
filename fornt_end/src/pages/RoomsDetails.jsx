@@ -112,24 +112,24 @@ function RoomsDetails() {
     
     try {
       const bookingData = {
-        roomId: id,
-        checkInDate: booking.checkIn,
-        checkOutDate: booking.checkOut,
-        numberOfGuests: booking.guests,
-        specialRequests: booking.specialRequests,
-      };
-      
-      // Here you would typically submit the booking to your API
-      const response = await api.post('/reservations', bookingData);
-      
-      // For now, we'll simulate a successful booking and redirect to payment
-      // setTimeout(() => {
-      //   // Store booking data in localStorage or state management to access in payment page
-      //   localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+        room_id: id,
+        check_in_date: booking.checkIn,
+        check_out_date: booking.checkOut,
         
-      //   // Navigate to payment page
-      //   navigate('/payment', { state: { bookingData } });
-      // }, 1000);
+      };
+      // console.log(bookingData);
+      
+      const response = await api.post('/reservations', bookingData);
+      console.log(response.status);
+      if (response.status == 200) {
+        
+        navigate('/payment');
+      } else {
+        
+        setBookingErrors({ submit: "Erreur inattendue. Veuillez réessayer." });
+        setIsSubmitting(false);
+      }
+      
     } catch (err) {
       console.error("Error creating booking:", err);
       setBookingErrors({ submit: "Erreur lors de la création de la réservation. Veuillez réessayer." });
@@ -137,7 +137,7 @@ function RoomsDetails() {
     }
   };
 
-  // Function to render amenity icons based on the amenities string
+
   const renderAmenities = (amenitiesString, hasWifi, hasTv) => {
     try {
       // Parse the JSON string if it exists
@@ -249,7 +249,7 @@ function RoomsDetails() {
   const baseImageUrl = 'http://127.0.0.1:8000/storage/';
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container md:p-16 mx-auto px-4 py-12 ">
       {/* Breadcrumbs */}
       <div className="flex items-center text-sm text-gray-500 mb-6">
         <span onClick={() => navigate('/')} className="hover:text-[#7C6A46] cursor-pointer">Accueil</span>
@@ -275,10 +275,10 @@ function RoomsDetails() {
           </div>
 
           {/* Room Image */}
-          <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
+          <div className="mb-8 rounded-lg overflow-hidden  ">
             <img 
               src={room.image ? `${baseImageUrl}${room.image}` : '/images/room.png'} 
-              className="w-full h-auto object-cover" 
+              className="md:w-1/2 w-full h-auto object-cover" 
               alt={room.name}
             />
           </div>
