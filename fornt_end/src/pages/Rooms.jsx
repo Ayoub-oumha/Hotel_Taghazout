@@ -106,8 +106,7 @@ function Rooms() {
                     </div>
                     <div className='flex items-center gap-2 mb-2'>
                         <span className='text-gray-600 text-sm'>{room.type}</span>
-                        <span>•</span>
-                        <span className='text-gray-600 text-sm'>Capacity: {room.capacity} persons</span>
+
                     </div>
                     <p className='text-gray-500 text-sm mb-2 line-clamp-2'>{room.description}</p>
                     <div className='flex items-center mb-3'>

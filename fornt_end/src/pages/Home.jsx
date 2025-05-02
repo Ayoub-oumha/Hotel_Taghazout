@@ -2,7 +2,11 @@ import React from 'react'
 import Homeimage from '../../public/images/Home_image.png';
 import image2 from '../../public/images/image2.png';
 import { Link } from 'react-router-dom';
-import { FaSwimmingPool, FaWifi, FaUtensils, FaSpa, FaGlassMartiniAlt, FaCar, FaCoffee, FaDumbbell } from 'react-icons/fa';
+import { IoGameController } from "react-icons/io5";
+import { FaSwimmingPool, FaWifi, FaUtensils, FaSpa, FaGlassMartiniAlt, FaCar, FaCoffee, FaDumbbell, FaSwimmer, FaParking } from 'react-icons/fa';
+import { PiLightbulbFilamentFill } from 'react-icons/pi';
+import { MdLocalLaundryService } from "react-icons/md";
+
 
 function Home() {
     const Main = () => {
@@ -25,14 +29,14 @@ function Home() {
 
     const Facilities = () => {
         const facilityItems = [
-            { icon: <FaSwimmingPool size={30} />, name: "Swimming Pool" },
+            { icon: <FaSwimmer  size={30} />, name: "Swimming Pool" },
             { icon: <FaWifi size={30} />, name: "Free Wi-Fi" },
-            { icon: <FaUtensils size={30} />, name: "Restaurant" },
-            { icon: <FaSpa size={30} />, name: "Spa & Wellness" },
-            { icon: <FaGlassMartiniAlt size={30} />, name: "Bar & Lounge" },
-            { icon: <FaCar size={30} />, name: "Free Parking" },
-            { icon: <FaCoffee size={30} />, name: "Room Service" },
-            { icon: <FaDumbbell size={30} />, name: "Fitness Center" }
+            { icon: <FaUtensils size={30} />, name: "Breakfast" },
+            { icon: <FaDumbbell size={30} />, name: "Gym" },
+            { icon: <IoGameController size={30} />, name: "Game center" },
+            { icon: <PiLightbulbFilamentFill size={30} />, name: "24/7 Light" },
+            { icon: <MdLocalLaundryService size={30} />, name: "Laundry" },
+            { icon: <FaParking size={30} />, name: "Parking space" }
         ];
 
         return (
@@ -43,7 +47,7 @@ function Home() {
                 </div>
                 <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
                     {facilityItems.map((facility, index) => (
-                        <div key={index} className='flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out'>
+                        <div key={index} className='flex flex-col items-center justify-center p-5 py-10 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out'>
                             <div className='text-[#7C6A46] mb-3'>
                                 {facility.icon}
                             </div>
@@ -95,13 +99,14 @@ function Home() {
                                 </div>
                             </div>
                             <p className='text-gray-600 italic mb-4'>
-                                "The stay at Taghazout Hub was incredible. The staff was friendly and the rooms were impeccably clean with amazing views of the ocean."
+                                "Kan wa7ed l'expérience incroyable f'hotel Taghazout Hob. Mli dakhala l'hotel, chft ch7al mn détail m3amr b'lhbb, w l'accueil kan 3la 7asab l'7ad. L'équipe dyal l'hôtel m3roofin b'l'professionalism w l'khidma mzyana. Aji, kat7ess b7al nta f'dar dyalk. L'9a3a kanat mzianin, w kaynin m3a wa7ed l'atmosphère relaxante li katkhlli l9alb yrtah. L'hotel kaymchi 3la tariqa mn modernité o f'l'9e3a katban 3la l'océan, chi7aja li katzid fi hotle m3a l'endroit. Khasni ngoul 3la l'7adika zwinin, kaynin mn t7t la piscine w hya makhfiya mzyan o riyadiya, m3a wa7ed l'air frais li kaydkhl l9alb dyalek f'li7b wa l'ra7a"
                             </p>
                             <div className='flex items-center'>
-                                <div className='w-12 h-12 bg-gray-300 rounded-full mr-4'></div>
+                                <img  className="w-12 h-12 rounded-full mr-2" src="https://yt3.googleusercontent.com/r6tDkGerE5jBOQSiigtPEEu0-clyD1VXWrlpE0QWKIc4hNdmRyxYAbNaggnYJI8tgMoACYoxwQ=s900-c-k-c0x00ffffff-no-rj" alt="" />
+                                
                                 <div>
-                                    <p className='font-medium'>John Doe</p>
-                                    <p className='text-sm text-gray-500'>New York, USA</p>
+                                    <p className='font-medium'>Ayoub</p>
+                                    <p className='text-sm text-gray-500'>Nador Youocde</p>
                                 </div>
                             </div>
                         </div>

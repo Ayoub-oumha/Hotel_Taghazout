@@ -8,7 +8,7 @@ function BookingConfirmation() {
   const { bookingData, totalPrice, room } = location.state || {};
   
   useEffect(() => {
-    // Si pas de données de réservation, rediriger vers la page d'accueil
+    
     if (!bookingData || !room) {
       navigate('/');
     }
@@ -18,7 +18,6 @@ function BookingConfirmation() {
     return null;
   }
 
-  // Calculer les détails de la réservation
   const checkIn = new Date(bookingData.checkInDate);
   const checkOut = new Date(bookingData.checkOutDate);
   const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));

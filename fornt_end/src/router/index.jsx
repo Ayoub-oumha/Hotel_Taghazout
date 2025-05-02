@@ -21,12 +21,12 @@ import MyReservations from '../pages/MyReservations';
 import ModifyReservation from '../pages/ModifyReservation';
 
 
-// Composant wrapper pour configurer le navigateur
+
 const NavigationManager = () => {
-  // Récupérer l'objet navigate
+  
   const navigate = useNavigate();
   
-  // Configurer la fonction de navigation pour l'API
+ 
   React.useEffect(() => {
     setNavigator(navigate);
   }, [navigate]);
