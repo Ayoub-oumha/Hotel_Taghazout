@@ -46,3 +46,5 @@ Route::get('/payment/cancel/{reservation}', [App\Http\Controllers\PaymentControl
 
 Route::middleware('auth:sanctum')->post('/payments/create-intent', [StripePaymentController::class, 'createPaymentIntent']);
 Route::middleware('auth:sanctum' , 'role:admin')->get('/admin/dashboard' , [ReservationController::class,'dashboardAdmin']) ;
+Route::get('rooms/{room}/booked-dates', [ReservationController::class, 'getBookedDates']);
+

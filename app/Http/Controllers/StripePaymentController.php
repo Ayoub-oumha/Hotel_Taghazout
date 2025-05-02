@@ -27,7 +27,7 @@ public function createPaymentIntent(Request $request)
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'eur',
+                    'currency' => 'mad',
                     'product_data' => [
                         'name' => 'Reservation #' . $reservation->id,
                         'description' => 'Room booking from ' . $reservation->check_in_date . ' to ' . $reservation->check_out_date,

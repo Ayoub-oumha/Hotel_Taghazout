@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Calendar from 'react-calendar';
+import { format, isWithinInterval, parseISO } from 'date-fns';
+import './../styles/Calendar.css';
 import api from '../api/api';
 import { FaUsers, FaCheck, FaTimes, FaWifi, FaSnowflake, FaMountain, FaSwimmingPool, FaParking, FaGlassMartiniAlt } from "react-icons/fa";
 import { BsTv } from "react-icons/bs";
@@ -13,8 +16,6 @@ function RoomsDetails() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  
-  
   const [booking, setBooking] = useState({
     checkIn: '',
     checkOut: '',
@@ -23,8 +24,8 @@ function RoomsDetails() {
   });
   const [bookingErrors, setBookingErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookedDates, setBookedDates] = useState([]);
 
- 
   const today = new Date().toISOString().split('T')[0];
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -47,12 +48,27 @@ function RoomsDetails() {
     fetchRoomDetails();
   }, [id]);
 
-  
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      if (id) {
+        try {
+          const response = await api.get(`/rooms/${id}/booked-dates`);
+          if (response.data && response.data.bookings) {
+            setBookedDates(response.data.bookings);
+          }
+        } catch (err) {
+          console.error("Error fetching booked dates:", err);
+        }
+      }
+    };
+
+    fetchBookedDates();
+  }, [id]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBooking({ ...booking, [name]: value });
-    
-    
+
     if (bookingErrors[name]) {
       const newErrors = { ...bookingErrors };
       delete newErrors[name];
@@ -60,18 +76,17 @@ function RoomsDetails() {
     }
   };
 
-  
   const validateBooking = () => {
     const errors = {};
-    
+
     if (!booking.checkIn) {
       errors.checkIn = "La date d'arrivée est requise";
     }
-    
+
     if (!booking.checkOut) {
       errors.checkOut = "La date de départ est requise";
     }
-    
+
     if (booking.checkIn && booking.checkOut) {
       const start = new Date(booking.checkIn);
       const end = new Date(booking.checkOut);
@@ -79,66 +94,54 @@ function RoomsDetails() {
         errors.checkOut = "La date de départ doit être après la date d'arrivée";
       }
     }
-    
+
     if (booking.guests < 1) {
       errors.guests = "Le nombre de clients doit être d'au moins 1";
     }
-    
+
     if (room && booking.guests > room.capacity) {
       errors.guests = `Cette chambre peut accueillir un maximum de ${room.capacity} personnes`;
     }
-    
+
     return errors;
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    
+
     const errors = validateBooking();
     if (Object.keys(errors).length > 0) {
       setBookingErrors(errors);
       return;
     }
-    
+
     if (!user) {
-      
       navigate('/login', { state: { returnUrl: `/rooms/${id}` } });
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const bookingData = {
         room_id: id,
         check_in_date: booking.checkIn,
         check_out_date: booking.checkOut,
-        
       };
-      // console.log(bookingData);
-      
+
       const response = await api.post('/reservations', bookingData);
-      console.log(response.status);
       if (response.status == 200) {
         if (response.data && response.data.payment_url) {
-          // Show success message
           alert(response.data.message || "Réservation créée avec succès");
-          // Redirect user to Stripe payment
           window.location.href = response.data.payment_url;
         } else {
-          // If payment URL is missing but the status was success
           setBookingErrors({ submit: "Impossible de procéder au paiement. Veuillez contacter le support." });
           setIsSubmitting(false);
         }
-        
       } else {
-        
         setBookingErrors({ submit: "Erreur inattendue. Veuillez réessayer." });
         setIsSubmitting(false);
       }
-      
     } catch (err) {
       console.error("Error creating booking:", err);
       setBookingErrors({ submit: "Erreur lors de la création de la réservation. Veuillez réessayer." });
@@ -146,15 +149,48 @@ function RoomsDetails() {
     }
   };
 
+  const isDateUnavailable = (date) => {
+    return bookedDates.some(booking => {
+      const checkIn = parseISO(booking.check_in_date);
+      const checkOut = parseISO(booking.check_out_date);
+      return isWithinInterval(date, { start: checkIn, end: checkOut });
+    });
+  };
+
+  const handleCheckInChange = (date) => {
+    setBooking({
+      ...booking,
+      checkIn: format(date, 'yyyy-MM-dd'),
+      checkOut: booking.checkOut && new Date(booking.checkOut) <= date ? '' : booking.checkOut
+    });
+
+    if (bookingErrors.checkIn) {
+      const newErrors = { ...bookingErrors };
+      delete newErrors.checkIn;
+      setBookingErrors(newErrors);
+    }
+  };
+
+  const handleCheckOutChange = (date) => {
+    setBooking({
+      ...booking,
+      checkOut: format(date, 'yyyy-MM-dd')
+    });
+
+    if (bookingErrors.checkOut) {
+      const newErrors = { ...bookingErrors };
+      delete newErrors.checkOut;
+      setBookingErrors(newErrors);
+    }
+  };
 
   const renderAmenities = (amenitiesString, hasWifi, hasTv) => {
     try {
-      // Parse the JSON string if it exists
       let amenitiesArray = [];
       if (amenitiesString) {
         amenitiesArray = JSON.parse(amenitiesString);
       }
-      
+
       return (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
           {hasWifi && (
@@ -163,42 +199,42 @@ function RoomsDetails() {
               <span>WiFi gratuit</span>
             </div>
           )}
-          
+
           {hasTv && (
             <div className="flex items-center gap-2">
               <BsTv className="text-xl text-[#7C6A46]" />
               <span>Télévision</span>
             </div>
           )}
-          
+
           {room.has_air_conditioning && (
             <div className="flex items-center gap-2">
               <FaSnowflake className="text-xl text-[#7C6A46]" />
               <span>Climatisation</span>
             </div>
           )}
-          
+
           {room.has_sea_view && (
             <div className="flex items-center gap-2">
               <FaMountain className="text-xl text-[#7C6A46]" />
               <span>Vue sur la mer</span>
             </div>
           )}
-          
+
           {amenitiesArray.includes("Pool") && (
             <div className="flex items-center gap-2">
               <FaSwimmingPool className="text-xl text-[#7C6A46]" />
               <span>Piscine</span>
             </div>
           )}
-          
+
           {amenitiesArray.includes("Parking") && (
             <div className="flex items-center gap-2">
               <FaParking className="text-xl text-[#7C6A46]" />
               <span>Parking</span>
             </div>
           )}
-          
+
           {amenitiesArray.includes("Minibar") && (
             <div className="flex items-center gap-2">
               <FaGlassMartiniAlt className="text-xl text-[#7C6A46]" />
@@ -259,7 +295,6 @@ function RoomsDetails() {
 
   return (
     <div className="container md:p-16 mx-auto px-4 py-12 ">
-      {/* Breadcrumbs */}
       <div className="flex items-center text-sm text-gray-500 mb-6">
         <span onClick={() => navigate('/')} className="hover:text-[#7C6A46] cursor-pointer">Accueil</span>
         <span className="mx-2">/</span>
@@ -269,7 +304,6 @@ function RoomsDetails() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-10">
-        {/* Left Column - Room Details */}
         <div className="w-full lg:w-2/3">
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
@@ -283,8 +317,7 @@ function RoomsDetails() {
             </p>
           </div>
 
-          {/* Room Image */}
-          <div className="mb-8 rounded-lg overflow-hidden  ">
+          <div className="mb-8 rounded-lg overflow-hidden">
             <img 
               src={room.image ? `${baseImageUrl}${room.image}` : '/images/room.png'} 
               className="md:w-1/2 w-full h-auto object-cover" 
@@ -292,7 +325,6 @@ function RoomsDetails() {
             />
           </div>
 
-          {/* Room Description */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold mb-3">Description</h2>
             <p className="text-gray-700 leading-relaxed">
@@ -300,7 +332,6 @@ function RoomsDetails() {
             </p>
           </div>
 
-          {/* Room Features */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold mb-3">Caractéristiques</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -339,13 +370,11 @@ function RoomsDetails() {
             </div>
           </div>
 
-          {/* Room Amenities */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold mb-3">Équipements</h2>
             {renderAmenities(room.amenities, room.has_wifi, room.has_tv)}
           </div>
 
-          {/* Room Policies */}
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-2xl font-semibold mb-3">Politiques</h2>
             <div className="space-y-4">
@@ -366,7 +395,6 @@ function RoomsDetails() {
           </div>
         </div>
 
-        {/* Right Column - Booking Form */}
         <div className="w-full lg:w-1/3">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-2xl font-semibold mb-4">Réserver</h2>
@@ -382,38 +410,51 @@ function RoomsDetails() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="checkIn" className="block text-sm font-medium text-gray-700">Date d'arrivée</label>
-                <input 
-                  type="date" 
-                  id="checkIn" 
-                  name="checkIn"
-                  min={today}
-                  value={booking.checkIn}
-                  onChange={handleInputChange}
-                  className={`mt-1 block w-full px-3 py-2 border ${bookingErrors.checkIn ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-[#7C6A46] focus:border-[#7C6A46]`}
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Date d'arrivée</label>
+                <div className="calendar-container">
+                  <Calendar
+                    onChange={handleCheckInChange}
+                    value={booking.checkIn ? new Date(booking.checkIn) : null}
+                    minDate={new Date()}
+                    tileDisabled={({date}) => isDateUnavailable(date)}
+                    className="rounded-md"
+                    calendarType="gregory"
+                    formatShortWeekday={(locale, date) => 
+                      ['D', 'L', 'M', 'M', 'J', 'V', 'S'][date.getDay()]
+                    }
+                    prevLabel={<span>&#10094;</span>}
+                    nextLabel={<span>&#10095;</span>}
+                  />
+                </div>
                 {bookingErrors.checkIn && <p className="mt-1 text-sm text-red-600">{bookingErrors.checkIn}</p>}
               </div>
 
               <div>
-                <label htmlFor="checkOut" className="block text-sm font-medium text-gray-700">Date de départ</label>
-                <input 
-                  type="date" 
-                  id="checkOut" 
-                  name="checkOut"
-                  min={booking.checkIn || tomorrowStr}
-                  value={booking.checkOut}
-                  onChange={handleInputChange}
-                  className={`mt-1 block w-full px-3 py-2 border ${bookingErrors.checkOut ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-[#7C6A46] focus:border-[#7C6A46]`}
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Date de départ</label>
+                <div className="calendar-container">
+                  <Calendar
+                    onChange={handleCheckOutChange}
+                    value={booking.checkOut ? new Date(booking.checkOut) : null}
+                    minDate={booking.checkIn ? new Date(booking.checkIn) : new Date()}
+                    tileDisabled={({date}) => isDateUnavailable(date)}
+                    className="rounded-md"
+                    calendarType="gregory"
+                    formatShortWeekday={(locale, date) => 
+                      ['D', 'L', 'M', 'M', 'J', 'V', 'S'][date.getDay()]
+                    }
+                    prevLabel={<span>&#10094;</span>}
+                    nextLabel={<span>&#10095;</span>}
+                  />
+                </div>
                 {bookingErrors.checkOut && <p className="mt-1 text-sm text-red-600">{bookingErrors.checkOut}</p>}
               </div>
+
               {bookingErrors.submit && (
                 <div className="p-3 bg-red-50 text-red-700 rounded-md">
                   {bookingErrors.submit}
                 </div>
               )}
-              
+
               {!room.is_available ? (
                 <div className="p-3 bg-red-50 text-red-700 rounded-md">
                   Cette chambre n'est pas disponible actuellement.
@@ -435,7 +476,7 @@ function RoomsDetails() {
                   ) : "Réserver maintenant"}
                 </button>
               )}
-              
+
               <p className="text-center text-sm text-gray-500 mt-4">
                 Vous ne serez pas débité maintenant. Le paiement sera demandé à l'étape suivante.
               </p>

@@ -230,11 +230,6 @@ class ReservationController extends Controller
         ]);
     }
 
-/**
- * Return dashboard statistics for admin
- * 
- * @return \Illuminate\Http\JsonResponse
- */
 public function dashboardAdmin()
 {
 
@@ -338,6 +333,17 @@ public function dashboardAdmin()
         'recent_reservations' => $recentReservations,
     ]);
 }
-
+public function getBookedDates(Room $room)
+{
+    $bookings = Reservation::where('room_id', $room->id)
+                  ->where('status', 'confirmed')
+                  ->orWhere('status', 'pending')
+                  ->where('check_out_date', '>=', now())
+                  ->get(['check_in_date', 'check_out_date']);
+                  
+    return response()->json([
+        'bookings' => $bookings
+    ]);
+}
 
 }
