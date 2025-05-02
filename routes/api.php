@@ -51,6 +51,13 @@ Route::get('/payment/success', function () {
 
 
 // Routes de paiement Stripe
-Route::post('/stripe/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
-Route::post('/stripe/confirm-payment', [StripePaymentController::class, 'confirmPayment']);
-Route::post('/stripe/webhook', [StripePaymentController::class, 'handleWebhook']);
+// Route::post('/stripe/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+// Route::post('/stripe/confirm-payment', [StripePaymentController::class, 'confirmPayment']);
+// Route::post('/stripe/webhook', [StripePaymentController::class, 'handleWebhook']);
+// ...existing code...
+
+// Payment webhook routes
+Route::get('/payment/success/{reservation}', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/cancel/{reservation}', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+
+// ...existing code...

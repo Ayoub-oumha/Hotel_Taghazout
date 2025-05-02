@@ -122,8 +122,17 @@ function RoomsDetails() {
       const response = await api.post('/reservations', bookingData);
       console.log(response.status);
       if (response.status == 200) {
+        if (response.data && response.data.payment_url) {
+          // Show success message
+          alert(response.data.message || "Réservation créée avec succès");
+          // Redirect user to Stripe payment
+          window.location.href = response.data.payment_url;
+        } else {
+          // If payment URL is missing but the status was success
+          setBookingErrors({ submit: "Impossible de procéder au paiement. Veuillez contacter le support." });
+          setIsSubmitting(false);
+        }
         
-        navigate('/payment');
       } else {
         
         setBookingErrors({ submit: "Erreur inattendue. Veuillez réessayer." });

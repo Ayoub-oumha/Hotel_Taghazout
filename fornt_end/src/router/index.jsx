@@ -21,6 +21,7 @@ import RoomsAdmin from '../pages/Admin/RoomsAdmin';
 import MyReservations from '../pages/MyReservations';
 import ModifyReservation from '../pages/ModifyReservation';
 import ReservationCart from '../pages/ReservationCart';
+import PaymentSuccess from '../pages/PaymentSuccess';
 
 // Composant wrapper pour configurer le navigateur
 const NavigationManager = () => {
@@ -49,6 +50,9 @@ function AppRouter() {
             <Route path="my-reservations" element={ <RoleProtectedRoute allowedRoles={["user"]} ><MyReservations/></RoleProtectedRoute> } />
             <Route path="modify-reservation/:id" element={ <RoleProtectedRoute allowedRoles={["user"]} ><ModifyReservation/></RoleProtectedRoute> } />
             <Route path="reservation-cart" element={ <RoleProtectedRoute allowedRoles={["user"]} ><ReservationCart/></RoleProtectedRoute> } />
+            <Route path="payment/success" element={ <RoleProtectedRoute allowedRoles={["user"]} ><PaymentSuccess /></RoleProtectedRoute> } />
+            <Route path="payment/success/:id" element={ <RoleProtectedRoute allowedRoles={["user"]} ><PaymentSuccess /></RoleProtectedRoute> } />
+            
             <Route path="reservation-confirmation" element={<ReservationConfirmation />} />
             <Route path="Explore" element={<Explore />} />
             <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />

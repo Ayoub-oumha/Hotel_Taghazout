@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 class ReservationController extends Controller
 {
@@ -25,41 +26,66 @@ class ReservationController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = Validator::make($request->all(), [
-            'room_id' => 'required|exists:rooms,id',
-            'check_in_date' => 'required|date|after_or_equal:today',
-            'check_out_date' => 'required|date|after:check_in_date',
-        ]);
+{
+    $validated = Validator::make($request->all(), [
+        'room_id' => 'required|exists:rooms,id',
+        'check_in_date' => 'required|date|after_or_equal:today',
+        'check_out_date' => 'required|date|after:check_in_date',
+    ]);
 
-        if($validated->fails()){
-            return response()->json(["message" => "error", "error" => $validated->errors()], 422);
-        }
-
-        $room = Room::findOrFail($request->room_id);
-       
-        $checkIn = new \DateTime($request->check_in_date);
-        $checkOut = new \DateTime($request->check_out_date);
-        $days = $checkIn->diff($checkOut)->days;
-        
-        $totalPrice = $room->price_per_night * $days;
-        
-        // Create a new reservation with pending status
-        $reservation = Reservation::create([
-            'user_id' => Auth::id(),
-            'room_id' => $request->room_id,
-            'check_in_date' => $request->check_in_date,
-            'check_out_date' => $request->check_out_date,
-            'total_price' => $totalPrice,
-            'status' => 'pending' // Default status from the schema
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Réservation créée avec succès',
-            'data' => $reservation
-        ], 200);
+    if ($validated->fails()) {
+        return response()->json(["message" => "error", "error" => $validated->errors()], 422);
     }
+
+    $room = Room::findOrFail($request->room_id);
+    
+    $checkIn = new \DateTime($request->check_in_date);
+    $checkOut = new \DateTime($request->check_out_date);
+    $days = $checkIn->diff($checkOut)->days;
+    
+    $totalPrice = $room->price_per_night * $days;
+
+    // Create reservation
+    $reservation = Reservation::create([
+        'user_id' => Auth::id(),
+        'room_id' => $request->room_id,
+        'check_in_date' => $request->check_in_date,
+        'check_out_date' => $request->check_out_date,
+        'total_price' => $totalPrice,
+        'status' => 'pending'
+    ]);
+
+    // Stripe
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $checkoutSession = StripeSession::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => [
+                    'name' => 'Réservation chambre #' . $room->id,
+                    'description' => 'Du ' . $checkIn->format('d/m/Y') . ' au ' . $checkOut->format('d/m/Y'),
+                ],
+                'unit_amount' => $totalPrice * 100, // en centimes
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => route('payment.success', ['reservation' => $reservation->id]),
+        'cancel_url' => route('payment.cancel', ['reservation' => $reservation->id]),
+        'metadata' => [
+            'reservation_id' => $reservation->id
+        ]
+    ]);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Réservation créée. Redirection vers Stripe...',
+        'payment_url' => $checkoutSession->url,
+        'data' => $reservation
+    ]);
+}
 
     public function update(Request $request, string $id)
     {
