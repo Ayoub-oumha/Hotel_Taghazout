@@ -36,28 +36,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('reservations/{id}/cancel', [ReservationController::class, 'cancel']);
     Route::post('reservations/{id}/confirm', [ReservationController::class, 'confirm']);
     Route::post('reservations/{id}/complete', [ReservationController::class, 'complete']);
+    Route::get('myReservation' , [ReservationController::class,'myReservation']);
 });
 
-Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+//payment 
 
-Route::get('/payment/success', function () {
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Paiement traité avec succès'
-    ]);
-})->name('payment.success');
-// Route::apiResource('users' , UserController::class);
-// Route::get('/test' , [UserController::class , 'index']) ;
-
-
-// Routes de paiement Stripe
-// Route::post('/stripe/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
-// Route::post('/stripe/confirm-payment', [StripePaymentController::class, 'confirmPayment']);
-// Route::post('/stripe/webhook', [StripePaymentController::class, 'handleWebhook']);
-// ...existing code...
-
-// Payment webhook routes
 Route::get('/payment/success/{reservation}', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment/cancel/{reservation}', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
 
-// ...existing code...
+Route::middleware('auth:sanctum')->post('/payments/create-intent', [StripePaymentController::class, 'createPaymentIntent']);
+Route::middleware('auth:sanctum' , 'role:admin')->get('/admin/dashboard' , [ReservationController::class,'dashboardAdmin']) ;

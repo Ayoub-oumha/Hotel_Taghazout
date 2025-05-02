@@ -24,7 +24,7 @@ class PaymentController extends Controller
         
         $reservationId = $reservation->id;
         $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
-        return redirect()->away("{$frontendUrl}/payment/success/{$reservationId}");
+        return redirect()->away("http://localhost:3000/my-reservations");
     }
 
     public function cancel(Request $request, Reservation $reservation)

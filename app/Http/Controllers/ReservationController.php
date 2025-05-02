@@ -62,7 +62,7 @@ class ReservationController extends Controller
         'payment_method_types' => ['card'],
         'line_items' => [[
             'price_data' => [
-                'currency' => 'eur',
+                'currency' => 'mad',
                 'product_data' => [
                     'name' => 'Réservation chambre #' . $room->id,
                     'description' => 'Du ' . $checkIn->format('d/m/Y') . ' au ' . $checkOut->format('d/m/Y'),
@@ -207,7 +207,7 @@ class ReservationController extends Controller
             ], 403);
         }
         
-        $reservation->update(['status' => 'completed']);
+        $reservation->update(['status' => 'confirmed']);
         
         return response()->json([
             'status' => 'success',
@@ -215,5 +215,129 @@ class ReservationController extends Controller
             'data' => $reservation
         ]);
     }
+    // SHOW reservation of user with id of user
+    public function myReservation(){
+        $userId = Auth::user()->id;
+        
+        $reservations = Reservation::where('user_id', $userId)
+            ->with('room')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'data' => $reservations
+        ]);
+    }
+
+/**
+ * Return dashboard statistics for admin
+ * 
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function dashboardAdmin()
+{
+
+    $totalReservations = Reservation::count();
+    
+
+    $pendingReservations = Reservation::where('status', 'pending')->count();
+    $confirmedReservations = Reservation::where('status', 'confirmed')->count();
+    $cancelledReservations = Reservation::where('status', 'cancelled')->count();
+    $completedReservations = Reservation::where('status', 'confirmed')->count();
+    
+    $totalRevenue = Reservation::where('status', 'confirmed')->sum('total_price');
+    
+
+    $currentMonthRevenue = Reservation::where('status', 'completed')
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->sum('total_price');
+    
+    $totalRooms = \App\Models\Room::count();
+
+    $tableColumns = \Schema::getColumnListing('reservations');
+    
+    $checkInOptions = ['check_in', 'checkin', 'check_in_date', 'date_start', 'start_date', 'from_date'];
+    $checkOutOptions = ['check_out', 'checkout', 'check_out_date', 'date_end', 'end_date', 'to_date'];
+    
+    $checkInColumn = null;
+    $checkOutColumn = null;
+    
+    foreach ($checkInOptions as $column) {
+        if (in_array($column, $tableColumns)) {
+            $checkInColumn = $column;
+            break;
+        }
+    }
+    
+    foreach ($checkOutOptions as $column) {
+        if (in_array($column, $tableColumns)) {
+            $checkOutColumn = $column;
+            break;
+        }
+    }
+    
+    // If we found the correct column names, use them for the query
+    $occupiedRooms = 0;
+    if ($checkInColumn && $checkOutColumn) {
+        $occupiedRooms = Reservation::where('status', 'confirmed')
+            ->whereDate($checkInColumn, '<=', now())
+            ->whereDate($checkOutColumn, '>=', now())
+            ->count();
+    } else {
+        // Fallback: just count confirmed reservations
+        $occupiedRooms = Reservation::where('status', 'confirmed')->count();
+    }
+    
+    // Get total users count
+    $totalUsers = \App\Models\User::count();
+    
+    // Recent reservations (last 5)
+    $recentReservations = Reservation::with('user', 'room')
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+    // Monthly revenue for the last 6 months
+    // $monthlyRevenue = [];
+    // for ($i = 5; $i >= 0; $i--) {
+    //     $month = now()->subMonths($i);
+    //     $revenue = Reservation::where('status', 'confirmed')
+    //         ->whereMonth('created_at', $month->month)
+    //         ->whereYear('created_at', $month->year)
+    //         ->sum('total_price');
+            
+    //     $monthlyRevenue[] = [
+    //         'month' => $month->format('M Y'),
+    //         'revenue' => $revenue
+    //     ];
+    // }
+
+    return response()->json([
+        'reservations' => [
+            'total' => $totalReservations,
+            'pending' => $pendingReservations,
+            'confirmed' => $confirmedReservations,
+            'cancelled' => $cancelledReservations,
+            'completed' => $completedReservations,
+        ],
+        'revenue' => [
+            'total' => $totalRevenue,
+            'current_month' => $currentMonthRevenue,
+            // 'monthly_data' => $monthlyRevenue,
+        ],
+        'rooms' => [
+            'total' => $totalRooms,
+            'occupied' => $occupiedRooms,
+            'available' => $totalRooms - $occupiedRooms,
+            'occupancy_rate' => $totalRooms > 0 ? round(($occupiedRooms / $totalRooms) * 100, 2) : 0,
+        ],
+        'users' => [
+            'total' => $totalUsers,
+        ],
+        'recent_reservations' => $recentReservations,
+    ]);
+}
+
 
 }

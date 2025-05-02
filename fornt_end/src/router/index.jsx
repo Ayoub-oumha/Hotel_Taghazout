@@ -55,12 +55,12 @@ function AppRouter() {
             
             <Route path="reservation-confirmation" element={<ReservationConfirmation />} />
             <Route path="Explore" element={<Explore />} />
-            <Route path="About" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><About/></RoleProtectedRoute>} />
+            <Route path="About" element={ <About/>} />
             <Route path="users" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><Users/></RoleProtectedRoute>} />
             <Route path="admin/rooms" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><RoomsAdmin/></RoleProtectedRoute>} />
             <Route path="register" element={<Register />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard" element={ <RoleProtectedRoute allowedRoles={["admin"]} ><Dashboard /></RoleProtectedRoute>} />
             <Route path="*" element={<Error404 />} />
             <Route path="unauthorized" element={<Unauthorized/>} />
           </Route>

@@ -50,7 +50,13 @@ function Register() {
     try {
       let res = await api.post("/register", inputs);
       login(res.data);
-      navigate("/dashboard");
+      if(res.data.user.role == "admin") {
+        
+        navigate("/dashboard");
+      }
+      else {
+        navigate("/Rooms");
+      }
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data && err.response.data.message) {

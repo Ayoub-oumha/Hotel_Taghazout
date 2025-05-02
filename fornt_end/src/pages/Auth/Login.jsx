@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../api/api'
 import { AuthContext } from '../../context/AuthContext';
@@ -10,7 +10,32 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const {login} = useContext(AuthContext)
+  const {login} = useContext(AuthContext) ;
+  const [isLoading , setIsLoading] = useState(false)
+ 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      setIsLoading(true);
+      api.get("/user")
+        .then((res) => {
+          const user = res.data.role;
+          if (user.role === "admin") {
+            navigate("/dashboard");
+          } else {
+            navigate("/Rooms");
+          }
+        })
+        .catch((err) => {
+          console.error("Token invalid or expired:", err);
+          setServerError("Session expired. Please log in again.");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [navigate]); 
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -39,7 +64,14 @@ function Login() {
     try {
       let res = await api.post("/login", inputs);
       login(res.data);
-      navigate("/dashboard");
+      // console.log(res.data.user.role) ;
+      if(res.data.user.role == "admin") {
+        
+        navigate("/dashboard");
+      }
+      else {
+        navigate("/Rooms");
+      }
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data && err.response.data.message) {
@@ -116,9 +148,7 @@ function Login() {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     Password
                   </label>
-                  <Link to="/forgot-password" className="text-sm font-medium text-[#7C6A46] hover:text-[#907c52]">
-                    Forgot password?
-                  </Link>
+                 
                 </div>
                 <input
                   id="password"
@@ -135,21 +165,7 @@ function Login() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                  className="h-4 w-4 text-[#7C6A46] focus:ring-[#7C6A46] border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-            </div>
+           
 
             {serverError && <p className="mt-4 text-sm text-red-600">{serverError}</p>}
 

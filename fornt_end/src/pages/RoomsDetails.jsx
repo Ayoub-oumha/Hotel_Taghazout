@@ -408,36 +408,6 @@ function RoomsDetails() {
                 />
                 {bookingErrors.checkOut && <p className="mt-1 text-sm text-red-600">{bookingErrors.checkOut}</p>}
               </div>
-
-              <div>
-                <label htmlFor="guests" className="block text-sm font-medium text-gray-700">Nombre de clients</label>
-                <select 
-                  id="guests" 
-                  name="guests"
-                  value={booking.guests}
-                  onChange={handleInputChange}
-                  className={`mt-1 block w-full px-3 py-2 border ${bookingErrors.guests ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-[#7C6A46] focus:border-[#7C6A46]`}
-                >
-                  {[...Array(room.capacity)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>{i + 1} {i === 0 ? 'personne' : 'personnes'}</option>
-                  ))}
-                </select>
-                {bookingErrors.guests && <p className="mt-1 text-sm text-red-600">{bookingErrors.guests}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700">Demandes spéciales (facultatif)</label>
-                <textarea 
-                  id="specialRequests" 
-                  name="specialRequests"
-                  rows="3"
-                  value={booking.specialRequests}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#7C6A46] focus:border-[#7C6A46]"
-                  placeholder="Ex: chambre au calme, lit bébé..."
-                />
-              </div>
-
               {bookingErrors.submit && (
                 <div className="p-3 bg-red-50 text-red-700 rounded-md">
                   {bookingErrors.submit}

@@ -1,194 +1,154 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
 import api from '../api/api';
-import { useNavigate } from 'react-router-dom';
-import { useReservationCart } from '../context/ReservationCartContext';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function MyReservations() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cancelingId, setCancelingId] = useState(null);
-  const [deletingId, setDeletingId] = useState(null);
-  const [addingToCartId, setAddingToCartId] = useState(null);
-  const navigate = useNavigate();
-  const { addToCart } = useReservationCart();
+  const [message, setMessage] = useState(null);
 
+  // Fetch user's reservations
   useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        // Get token from local storage
+        const token = localStorage.getItem('token');
+        
+        const response = await api.get('/myReservation');
+        
+        if (response.data.status === 'success') {
+          setReservations(response.data.data);
+        } else {
+          setError('Failed to fetch reservations');
+        }
+      } catch (err) {
+        setError('Error fetching reservations: ' + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchReservations();
   }, []);
 
-  const fetchReservations = async () => {
-    setLoading(true);
+  const handlePayNow = async (reservationId) => {
     try {
-      const response = await api.get('/reservations');
-      // Response data structure changed to match the API
-      setReservations(response.data.data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Erreur lors de la récupération des réservations:', err);
-      setError('Impossible de charger vos réservations. Veuillez réessayer plus tard.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancelReservation = async (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-      setCancelingId(id);
-      try {
-        await api.put(`/reservations/${id}/cancel`);
-        // Mettre à jour l'état local
-        setReservations(reservations.map(reservation => 
-          reservation.id === id ? { ...reservation, status: 'Annulée' } : reservation
-        ));
-        toast.success('Réservation annulée avec succès');
-      } catch (err) {
-        console.error('Erreur lors de l\'annulation:', err);
-        toast.error('Impossible d\'annuler la réservation. Veuillez réessayer.');
-      } finally {
-        setCancelingId(null);
-      }
-    }
-  };
-
-  const handleDeleteReservation = async (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer définitivement cette réservation ?')) {
-      setDeletingId(id);
-      try {
-        await api.delete(`/reservations/${id}`);
-        // Supprimer de l'état local
-        setReservations(reservations.filter(reservation => reservation.id !== id));
-        toast.success('Réservation supprimée avec succès');
-      } catch (err) {
-        console.error('Erreur lors de la suppression:', err);
-        toast.error('Impossible de supprimer la réservation. Veuillez réessayer.');
-      } finally {
-        setDeletingId(null);
-      }
-    }
-  };
-
-  const handleModifyReservation = (id) => {
-    navigate(`/modify-reservation/${id}`);
-  };
-
-  const handleAddToCart = (reservation) => {
-    setAddingToCartId(reservation.id);
-    try {
-      const result = addToCart(reservation);
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.info(result.message);
-      }
-    } catch (err) {
-      console.error('Erreur lors de l\'ajout au panier:', err);
-      toast.error('Impossible d\'ajouter la réservation au panier');
-    } finally {
-      setAddingToCartId(null);
-    }
-  };
-
-  // Formater la date
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
-  };
-
-  if (loading) return <div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>;
-
-  if (error) return <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-5" role="alert">{error}</div>;
- 
-  
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-      <h1 className="text-3xl font-bold text-center mb-8">Mes Réservations</h1>
       
+      const response = await api.post('/payments/create-intent', {
+        reservation_id: reservationId
+      });
+      
+      if (response.data.success) {
+        
+        window.open(response.data.payment_url, '_blank');
+        
+        setMessage('Payment page opened in a new tab. Please complete your payment.');
+        
+
+        setTimeout(() => setMessage(null), 5000);
+      } else {
+        setError('Failed to initialize payment');
+        setTimeout(() => setError(null), 3000);
+      }
+    } catch (err) {
+      setError('Error initializing payment: ' + err.message);
+      setTimeout(() => setError(null), 3000);
+    }
+  };
+
+  // Format date string to be more readable
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  if (loading) return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex justify-center">
+      <div className="text-[#7C6A46] font-semibold text-xl">Loading your reservations...</div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex justify-center">
+      <div className="text-red-500 font-semibold text-xl">{error}</div>
+    </div>
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-[#7C6A46] border-b pb-4 border-[#7C6A46]/30">My Reservations</h1>
+      
+      {message && (
+        <div className="bg-[#7C6A46]/10 border-l-4 border-[#7C6A46] text-[#7C6A46] p-4 mb-6 rounded">
+          {message}
+        </div>
+      )}
+
       {reservations.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="mb-4">Vous n'avez aucune réservation pour le moment.</p>
-          <Link to="/rooms" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Réserver une chambre
-          </Link>
+        <div className="bg-gray-50 p-12 rounded-lg text-center">
+          <p className="text-lg text-gray-600">You don't have any reservations yet.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reservations.map((reservation) => (
-            <div key={reservation.id} className="border rounded-lg overflow-hidden shadow-lg bg-white">
-              {reservation.room?.image && (
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={`http://localhost:8000/storage/${reservation.room.image}`} 
-                    className="w-full h-full object-cover" 
-                    alt={reservation.room.name} 
-                  />
-                </div>
-              )}
+            <div 
+              key={reservation.id} 
+              className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white"
+            >
+              {/* Room Image */}
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src={`http://127.0.0.1:8000/storage/${reservation.room.image}`} 
+                  alt={reservation.room.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {/* Reservation Details */}
               <div className="p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-semibold">Chambre {reservation.room?.name || 'Non disponible'}</h3>
-                  <span className={`px-2 py-1 rounded text-xs font-bold uppercase
-                    ${reservation.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                      reservation.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
-                      'bg-yellow-100 text-yellow-800'}`}>
-                    {reservation.status === 'pending' ? 'En attente' : 
-                     reservation.status === 'confirmed' ? 'Confirmée' : 
-                     reservation.status === 'cancelled' ? 'Annulée' : reservation.status}
+                <div className="flex justify-between items-start">
+                  <h3 className="text-xl font-semibold text-[#7C6A46]">{reservation.room.name}</h3>
+                  <span className={`px-3 py-1 rounded-full text-sm 
+                    ${reservation.status === 'confirmed' ? 'bg-[#7C6A46]/10 text-[#7C6A46]' : 'bg-yellow-100 text-yellow-800'}`}>
+                    {reservation.status}
                   </span>
                 </div>
                 
-                <div className="mb-4">
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Arrivée:</span> {formatDate(reservation.check_in_date)}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Départ:</span> {formatDate(reservation.check_out_date)}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Capacité:</span> {reservation.room?.capacity} personnes
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Prix par nuit:</span> {reservation.room?.price_per_night} MAD
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Prix Total:</span> {reservation.total_price} MAD
-                  </p>
+                <p className="text-gray-600 mt-1">Room #{reservation.room.room_number}</p>
+                <p className="text-gray-600">Type: {reservation.room.type}</p>
+                
+                <div className="mt-3">
+                  <p><span className="font-medium text-[#7C6A46]">Check-in:</span> {formatDate(reservation.check_in_date)}</p>
+                  <p><span className="font-medium text-[#7C6A46]">Check-out:</span> {formatDate(reservation.check_out_date)}</p>
+                  <p className="mt-2"><span className="font-medium text-[#7C6A46]">Total Price:</span> MAD {parseFloat(reservation.total_price).toFixed(2)}</p>
                 </div>
-
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {reservation.status !== 'cancelled' && (
-                    <>
-                      <button
-                        onClick={() => handleModifyReservation(reservation.id)}
-                        disabled={reservation.status === 'cancelled'}
-                        className="flex-1 bg-blue-500 hover:bg-blue-700 text-white text-sm py-2 px-3 rounded">
-                        Modifier
-                      </button>
-                      <button
-                        onClick={() => handleCancelReservation(reservation.id)}
-                        disabled={cancelingId === reservation.id || reservation.status === 'cancelled'}
-                        className="flex-1 bg-yellow-500 hover:bg-yellow-700 text-white text-sm py-2 px-3 rounded">
-                        {cancelingId === reservation.id ? 'En cours...' : 'Annuler'}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDeleteReservation(reservation.id)}
-                    disabled={deletingId === reservation.id}
-                    className="flex-1 bg-red-500 hover:bg-red-700 text-white text-sm py-2 px-3 rounded">
-                    {deletingId === reservation.id ? 'En cours...' : 'Supprimer'}
-                  </button>
-                  <button
-                    onClick={() => handleAddToCart(reservation)}
-                    disabled={addingToCartId === reservation.id || reservation.status === 'cancelled'}
-                    className="flex-1 bg-green-500 hover:bg-green-700 text-white text-sm py-2 px-3 rounded">
-                    {addingToCartId === reservation.id ? 'En cours...' : 'Ajouter au panier'}
-                  </button>
+                
+                {/* Amenities */}
+                <div className="mt-3">
+                  <p className="font-medium text-[#7C6A46]">Amenities:</p>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {JSON.parse(reservation.room.amenities).map((amenity, index) => (
+                      <span key={index} className="bg-[#7C6A46]/10 px-2 py-1 text-sm rounded text-[#7C6A46]">
+                        {amenity}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+                
+                {/* Pay Now Button for Pending Reservations */}
+                {reservation.status === 'pending' && (
+                  <button
+                    onClick={() => handlePayNow(reservation.id)}
+                    className="mt-4 w-full bg-[#7C6A46] hover:bg-[#9F8A66] text-white font-semibold py-2 px-4 rounded transition-colors"
+                  >
+                    Pay Now
+                  </button>
+                )}
               </div>
             </div>
           ))}

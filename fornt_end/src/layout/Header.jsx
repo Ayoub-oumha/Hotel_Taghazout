@@ -32,11 +32,17 @@ function Header() {
         
         {/* Desktop Navigation */}
         <ul className='hidden md:flex align-center gap-6 lg:gap-10'>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/Explore">Explore</Link></li>
-          <li><Link to="/Rooms">Rooms</Link></li>
-          <li><Link to="/About">About</Link></li>
-          <li><Link to="/Contact">Contact</Link></li>
+        {(!user || user.role != 'admin') && (
+            <>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/Explore">Explore</Link></li>
+            <li><Link to="/Rooms">Rooms</Link></li>
+            <li><Link to="/About">About</Link></li>
+            <li><Link to="/Contact">Contact</Link></li>
+            </>
+          )}
+          
+          
           {user && user.role === 'admin' && (
             <li><Link to="/dashboard" className="text-[#7C6A46] font-bold">Dashboard</Link></li>
           )}
@@ -56,15 +62,7 @@ function Header() {
             </>
           ) : (
             <>
-              {/* Cart Icon with Badge */}
-              <Link to="/reservation-cart" className="relative mr-3">
-                <FaShoppingCart className="text-[#7C6A46] text-xl" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
+             
 
               <div className="relative">
                 <button 
@@ -95,15 +93,8 @@ function Header() {
                           Dashboard
                         </Link>
                       )}
-                      <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Profil
-                      </Link>
-                      <Link to="/my-reservations" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Mes réservations
-                      </Link>
-                      <Link to="/reservation-cart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Panier de réservation {cartCount > 0 && `(${cartCount})`}
-                      </Link>
+                      
+                      
                       <button 
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
@@ -117,7 +108,7 @@ function Header() {
             </>
           )}
           
-          <button className='bg-[#7C6A46] text-white px-3 py-2 rounded cursor-pointer'>Book now</button>
+          {/* <button className='bg-[#7C6A46] text-white px-3 py-2 rounded cursor-pointer'>Book now</button> */}
         </div>
         
         {/* Mobile menu button */}
@@ -160,17 +151,7 @@ function Header() {
             ) : (
               <>
                 {/* Mobile Cart Link */}
-                <Link to="/reservation-cart" onClick={toggleMenu} className="flex items-center justify-between bg-[#F5F2EA] p-3 rounded-md">
-                  <div className="flex items-center gap-2">
-                    <FaShoppingCart className="text-[#7C6A46]" />
-                    <span>Panier de réservation</span>
-                  </div>
-                  {cartCount > 0 && (
-                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
+              
                 
                 <div className="bg-[#F5F2EA] p-3 rounded-md mb-2">
                   <div className="flex items-center gap-2 mb-2">
@@ -182,14 +163,7 @@ function Header() {
                   </div>
                   
                   <div className="flex flex-col gap-1">
-                    {user.role === 'admin' && (
-                      <Link to="/dashboard" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
-                        Dashboard
-                      </Link>
-                    )}
-                    <Link to="/profile" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
-                      Profil
-                    </Link>
+                   
                     <Link to="/my-reservations" onClick={toggleMenu} className="text-sm text-gray-700 hover:text-[#7C6A46] py-1">
                       Mes réservations
                     </Link>
