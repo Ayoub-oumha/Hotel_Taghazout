@@ -1,14 +1,14 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import Header from './Header'
+import Footer from './Footer'
 
 function Master() {
   return (
     <>
-        <header>
-            <img src="" alt="" />
-        </header>
+        <Header/>
         <main><Outlet/></main>
-        <footer>Footer</footer>
+        <Footer/>
     </>
   )
 }

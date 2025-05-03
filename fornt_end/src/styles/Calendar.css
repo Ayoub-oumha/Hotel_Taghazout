@@ -1,0 +1,131 @@
+/* Base calendar styling */
+.calendar-container {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .react-calendar {
+    width: 100%;
+    max-width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    line-height: 1.5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem;
+  }
+  
+  /* Navigation arrows and month display */
+  .react-calendar__navigation {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  
+  .react-calendar__navigation button {
+    min-width: 32px;
+    background: none;
+    border: 0;
+    color: #4a5568;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    background-color: #f7fafc;
+  }
+  
+  .react-calendar__navigation button[disabled] {
+    opacity: 0.5;
+  }
+  
+  .react-calendar__navigation__label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2d3748;
+  }
+  
+  /* Month view styling */
+  .react-calendar__month-view__weekdays {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #4a5568;
+    text-transform: uppercase;
+  }
+  
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 0.5rem 0;
+  }
+  
+  .react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none;
+  }
+  
+  /* Day tiles */
+  .react-calendar__tile {
+    max-width: 100%;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    background: none;
+    border: 0;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 0.25rem;
+  }
+  
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    background-color: #edf2f7;
+  }
+  
+  .react-calendar__tile--now {
+    background-color: #ebf4ff;
+    color: #3182ce;
+  }
+  
+  .react-calendar__tile--now:enabled:hover,
+  .react-calendar__tile--now:enabled:focus {
+    background-color: #e6f2ff;
+  }
+  
+  /* Selected dates */
+  .react-calendar__tile--active {
+    background: #7C6A46 !important;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    background: #8d794f !important;
+  }
+  
+  /* Range selection */
+  .react-calendar__tile--rangeStart,
+  .react-calendar__tile--rangeEnd {
+    background: #7C6A46 !important;
+    color: white;
+    border-radius: 0.25rem;
+  }
+  
+  /* Unavailable dates */
+  .react-calendar__tile--disabled {
+    background-color: #fff2f2;
+    color: #e53e3e;
+    text-decoration: line-through;
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Weekend dates */
+  .react-calendar__month-view__days__day--weekend {
+    color: #e53e3e;
+  }
+  
+  /* Outside month dates */
+  .react-calendar__month-view__days__day--neighboringMonth {
+    color: #a0aec0;
+  }
