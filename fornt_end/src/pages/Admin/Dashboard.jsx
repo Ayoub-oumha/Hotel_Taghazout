@@ -196,7 +196,7 @@ function Dashboard() {
                       {booking.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-sm font-medium text-gray-800">${booking.amount}</td>
+                  <td className="py-3 px-4 text-sm font-medium text-gray-800">MAD {booking.amount}</td>
                 </tr>
               ))}
             </tbody>

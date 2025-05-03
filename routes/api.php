@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\StripeController;
-use App\Http\Controllers\StripePaymentController;
+
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,9 +34,9 @@ Route::middleware( 'auth:sanctum' ,'role:admin')->group(function () {
 // Reservation API Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('reservations', ReservationController::class);
-    Route::post('reservations/{id}/cancel', [ReservationController::class, 'cancel']);
-    Route::post('reservations/{id}/confirm', [ReservationController::class, 'confirm']);
-    Route::post('reservations/{id}/complete', [ReservationController::class, 'complete']);
+    // Route::post('reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+    // Route::post('reservations/{id}/confirm', [ReservationController::class, 'confirm']);
+    // Route::post('reservations/{id}/complete', [ReservationController::class, 'complete']);
     Route::get('myReservation' , [ReservationController::class,'myReservation']);
 });
 
@@ -44,7 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/payment/success/{reservation}', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment/cancel/{reservation}', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
 
-Route::middleware('auth:sanctum')->post('/payments/create-intent', [StripePaymentController::class, 'createPaymentIntent']);
+Route::middleware('auth:sanctum')->post('/payments/create-intent', [PaymentController::class, 'createPaymentIntent']);
 Route::middleware('auth:sanctum' , 'role:admin')->get('/admin/dashboard' , [ReservationController::class,'dashboardAdmin']) ;
 Route::get('rooms/{room}/booked-dates', [ReservationController::class, 'getBookedDates']);
 

@@ -155,66 +155,66 @@ class ReservationController extends Controller
             'message' => 'Reservation deleted successfully'
         ]);
     }
-    public function cancel(string $id)
-    {
-        $reservation = Reservation::findOrFail($id);
+    // public function cancel(string $id)
+    // {
+    //     $reservation = Reservation::findOrFail($id);
         
        
-        if (Auth::id() !== $reservation->user_id && !Auth::user()->isAdmin()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized'
-            ], 403);
-        }
+    //     if (Auth::id() !== $reservation->user_id && !Auth::user()->isAdmin()) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Unauthorized'
+    //         ], 403);
+    //     }
         
-        $reservation->update(['status' => 'cancelled']);
+    //     $reservation->update(['status' => 'cancelled']);
         
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Reservation cancelled successfully',
-            'data' => $reservation
-        ]);
-    }
-    public function confirm(string $id)
-    {
-        $reservation = Reservation::findOrFail($id);
-        
-        
-        if (!Auth::user()->isAdmin()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized'
-            ], 403);
-        }
-        
-        $reservation->update(['status' => 'confirmed']);
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Reservation confirmed successfully',
-            'data' => $reservation
-        ]);
-    }
-    public function complete(string $id)
-    {
-        $reservation = Reservation::findOrFail($id);
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Reservation cancelled successfully',
+    //         'data' => $reservation
+    //     ]);
+    // }
+    // public function confirm(string $id)
+    // {
+    //     $reservation = Reservation::findOrFail($id);
         
         
-        if (!Auth::user()->isAdmin()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized'
-            ], 403);
-        }
+    //     if (!Auth::user()->isAdmin()) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Unauthorized'
+    //         ], 403);
+    //     }
         
-        $reservation->update(['status' => 'confirmed']);
+    //     $reservation->update(['status' => 'confirmed']);
         
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Reservation marked as completed',
-            'data' => $reservation
-        ]);
-    }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Reservation confirmed successfully',
+    //         'data' => $reservation
+    //     ]);
+    // }
+    // public function complete(string $id)
+    // {
+    //     $reservation = Reservation::findOrFail($id);
+        
+        
+    //     if (!Auth::user()->isAdmin()) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Unauthorized'
+    //         ], 403);
+    //     }
+        
+    //     $reservation->update(['status' => 'confirmed']);
+        
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Reservation marked as completed',
+    //         'data' => $reservation
+    //     ]);
+    // }
     // SHOW reservation of user with id of user
     public function myReservation(){
         $userId = Auth::user()->id;
