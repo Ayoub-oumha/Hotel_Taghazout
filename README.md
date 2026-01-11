@@ -1,66 +1,186 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏨 TAGHAZOUT HUB – Plateforme de Réservation d’Hôtel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Description
 
-## About Laravel
+**TAGHAZOUT HUB** est une **plateforme web de réservation d’hôtel** destinée à promouvoir l’hôtel TAGHAZOUT HUB, situé dans la région de Taghazout.
+L’application permet aux clients de **rechercher, réserver et payer des chambres en ligne**, et aux hôteliers de **gérer les chambres, réservations, promotions et statistiques** via un tableau de bord administrateur.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+👉 Application **full-stack** (Frontend + Backend)
+👉 Destinée aux visiteurs locaux et internationaux
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Objectifs du Projet
 
-## Learning Laravel
+* Simplifier le processus de réservation d’hôtel
+* Améliorer la visibilité et l’image de TAGHAZOUT HUB
+* Centraliser la gestion des chambres et des réservations
+* Offrir une expérience utilisateur moderne et sécurisée
+* Fournir des statistiques utiles pour la prise de décision
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🧰 Technologies Utilisées
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🔙 Backend
 
-## Laravel Sponsors
+* **Langage** : PHP
+* **Framework** : Laravel
+* **API** : RESTful
+* **Base de données** : MySQL
+* **Authentification** : JWT
+* **Sécurité** : bcrypt, protection CSRF & XSS
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🌐 Frontend
 
-### Premium Partners
+* **Framework** : React.js
+* **State Management** : Redux
+* **Routing** : React Router
+* **UI / Design** : Tailwind CSS, Material-UI
+* **HTTP Client** : Axios
+* **Cartographie** : Google Maps API
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 🚀 DevOps & Outils
 
-## Contributing
+* Git / GitHub
+* GitHub Actions (CI/CD)
+* Hébergement : Hostinger
+* SSL / TLS
+* Jira / Trello (gestion de projet Agile)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🏗️ Architecture
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Architecture **full-stack découplée** :
 
-## Security Vulnerabilities
+```
+Frontend (React)
+   ↓ Axios
+Backend (Laravel REST API)
+   ↓
+MySQL Database
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Séparation claire Frontend / Backend
+* API REST sécurisée
+* Logique métier centralisée côté backend
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 👥 Rôles Utilisateurs
+
+### 👤 Client
+
+* Inscription / Connexion
+* Recherche et filtrage des chambres
+* Réservation en ligne
+* Paiement sécurisé
+* Gestion du profil
+* Historique des réservations
+* Avis et notation
+
+### 🛠️ Administrateur (Hôtelier)
+
+* Gestion des chambres (CRUD)
+* Gestion des disponibilités
+* Configuration des tarifs et promotions
+* Gestion des réservations (confirmation / annulation)
+* Consultation des statistiques et rapports
+* Gestion des demandes spéciales clients
+
+---
+
+## 📦 Fonctionnalités Principales
+
+### 🔐 Authentification
+
+* Inscription et connexion sécurisées
+* Récupération de mot de passe
+* Authentification sociale (Google / Facebook – optionnel)
+
+---
+
+### 🔍 Recherche & Réservation
+
+* Recherche de chambres par date
+* Filtres (prix, équipements)
+* Calendrier interactif
+* Ajout de services supplémentaires
+* Paiement en ligne sécurisé (PayPal)
+
+---
+
+### 📊 Tableau de Bord Administrateur
+
+* Suivi des réservations
+* Taux d’occupation
+* Revenus par période
+* Statistiques clients
+* Rapports personnalisables
+
+---
+
+## 🔐 Sécurité
+
+* Authentification JWT
+* Hashage des mots de passe (bcrypt)
+* Protection contre CSRF et XSS
+* Validation des données côté serveur et client
+* Sauvegarde automatique de la base de données
+
+---
+
+## 🧪 Tests
+
+* Tests unitaires backend
+* Tests fonctionnels (parcours utilisateur)
+* Tests de performance
+* Tests de sécurité
+
+---
+
+## ▶️ Installation & Lancement
+
+### Backend (Laravel)
+
+```bash
+git clone https://github.com/username/taghazout-hub-backend.git
+cd taghazout-hub-backend
+composer install
+php artisan migrate
+php artisan serve
+```
+
+### Frontend (React)
+
+```bash
+git clone https://github.com/username/taghazout-hub-frontend.git
+cd taghazout-hub-frontend
+npm install
+npm start
+```
+
+---
+
+## 📑 Livrables
+
+* Code source (GitHub)
+* Cahier des charges
+* Diagrammes UML (Classes, ERD, Use Case)
+* Maquettes UI
+* Projet Jira / Trello
+* Présentation du projet
+
+---
+
+## 👨‍💻 Auteur
+
+**Ayoub Oumha**
+Projet académique – Plateforme de réservation d’hôtel
+
+---
+
+## 📄 Licence
+
+Projet à usage pédagogique.
